@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>March Madness 2026 - Bracket Comparison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f7f2e8;
+      --charcoal: #1d1d1f;
+      --yes: #22c55e;
+      --no: #ef4444;
+      --yes-light: #dcfce7;
+      --no-light: #fee2e2;
+      --yes-bg: rgba(34, 197, 94, 0.1);
+      --no-bg: rgba(239, 68, 68, 0.1);
+      --blue: #3b82f6;
+      --blue-light: #dbeafe;
+      --orange: #f97316;
+      --orange-light: #ffedd5;
+      --purple: #8b5cf6;
+      --purple-light: #ede9fe;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 32px 0 24px;
+      border-bottom: 1px solid rgba(29, 29, 31, 0.1);
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    header .subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: rgba(29, 29, 31, 0.5);
+      margin-top: 4px;
+    }
+
+    header .tournament-stage {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 12px;
+      background: rgba(29, 29, 31, 0.05);
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid rgba(29, 29, 31, 0.08);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Score Overview Grid */
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .score-grid { grid-template-columns: 1fr; }
+    }
+
+    .score-card {
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-card .rank-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 14px;
+      color: white;
+    }
+
+    .score-card .entry-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .score-card .champion-pick {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: rgba(29, 29, 31, 0.5);
+      margin-bottom: 12px;
+    }
+
+    .score-card .score-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .score-card .score-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(29, 29, 31, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+
+    .score-card .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(29, 29, 31, 0.06);
+    }
+
+    .score-card .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .score-card .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .score-card .stat-label {
+      font-size: 10px;
+      color: rgba(29, 29, 31, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .score-card .record-bar {
+      margin-top: 12px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--no-bg);
+      overflow: hidden;
+    }
+
+    .score-card .record-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--yes);
+      transition: width 0.5s ease;
+    }
+
+    /* Bracket Comparison Table */
+    .matchup-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .matchup-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(29, 29, 31, 0.4);
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid rgba(29, 29, 31, 0.1);
+    }
+
+    .matchup-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(29, 29, 31, 0.06);
+      vertical-align: middle;
+    }
+
+    .matchup-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .matchup-table .matchup-cell {
+      min-width: 160px;
+    }
+
+    .matchup-label {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(29, 29, 31, 0.35);
+      margin-bottom: 4px;
+    }
+
+    .matchup-teams {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .seed {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(29, 29, 31, 0.4);
+      margin-right: 2px;
+    }
+
+    .pick-cell {
+      min-width: 130px;
+    }
+
+    .pick-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pick-chip.alive {
+      background: var(--yes-light);
+      color: #15803d;
+    }
+
+    .pick-chip.dead {
+      background: var(--no-light);
+      color: #b91c1c;
+      text-decoration: line-through;
+    }
+
+    .pick-chip.pending {
+      background: rgba(29, 29, 31, 0.05);
+      color: var(--charcoal);
+    }
+
+    .pick-chip .pick-seed {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      opacity: 0.6;
+    }
+
+    .odds-cell {
+      min-width: 100px;
+    }
+
+    /* Probability Bar */
+    .prob-bar-container {
+      width: 100%;
+    }
+
+    .prob-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .prob-bar-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .prob-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--no-bg);
+      overflow: hidden;
+    }
+
+    .prob-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--yes);
+      transition: width 0.5s ease;
+    }
+
+    /* Market Odds */
+    .odds-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 1024px) {
+      .odds-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .odds-grid { grid-template-columns: 1fr; }
+    }
+
+    .odds-card {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .odds-card .team-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .odds-card .team-name {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .odds-card .team-seed {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(29, 29, 31, 0.4);
+      background: rgba(29, 29, 31, 0.05);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .odds-card .odds-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .odds-card .odds-source {
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(29, 29, 31, 0.5);
+      font-size: 11px;
+    }
+
+    .odds-card .odds-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .odds-card .odds-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(29, 29, 31, 0.06);
+      overflow: hidden;
+    }
+
+    .odds-card .odds-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    /* Controversial Matchups */
+    .controversy-card {
+      padding: 20px;
+      margin-bottom: 12px;
+      border-left: 4px solid var(--orange);
+    }
+
+    .controversy-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .controversy-matchup {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .controversy-round {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(29, 29, 31, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .controversy-heat {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--orange-light);
+      color: var(--orange);
+    }
+
+    .controversy-picks {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .controversy-pick {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(29, 29, 31, 0.03);
+      text-align: center;
+    }
+
+    .controversy-pick .picker-name {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(29, 29, 31, 0.4);
+      margin-bottom: 4px;
+    }
+
+    .controversy-pick .pick-value {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .controversy-market {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(59, 130, 246, 0.06);
+      font-size: 12px;
+    }
+
+    .controversy-market .market-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(29, 29, 31, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    /* Path to Championship */
+    .path-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .path-grid { grid-template-columns: 1fr; }
+      .controversy-picks { grid-template-columns: 1fr; }
+    }
+
+    .path-card {
+      padding: 20px;
+    }
+
+    .path-card .path-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .path-card .path-champion {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: rgba(29, 29, 31, 0.5);
+      margin-bottom: 14px;
+    }
+
+    .path-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(29, 29, 31, 0.04);
+    }
+
+    .path-step:last-child {
+      border-bottom: none;
+    }
+
+    .path-round {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(29, 29, 31, 0.35);
+      width: 36px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .path-team {
+      font-weight: 600;
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .path-prob {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .path-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Round by Round */
+    .round-comparison {
+      overflow-x: auto;
+    }
+
+    .round-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid rgba(29, 29, 31, 0.06);
+      padding-bottom: 0;
+    }
+
+    .round-tab {
+      padding: 10px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(29, 29, 31, 0.4);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.15s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .round-tab:hover {
+      color: var(--charcoal);
+    }
+
+    .round-tab.active {
+      color: var(--charcoal);
+      border-bottom-color: var(--charcoal);
+    }
+
+    .round-content {
+      display: none;
+    }
+
+    .round-content.active {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      padding: 24px 0;
+      border-top: 1px solid rgba(29, 29, 31, 0.1);
+      margin-top: 40px;
+    }
+
+    footer p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(29, 29, 31, 0.3);
+    }
+
+    /* Dot pattern background */
+    .dot-bg {
+      background-image: radial-gradient(circle, #d4d0c8 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* Eliminated overlay */
+    .eliminated {
+      opacity: 0.4;
+    }
+
+    /* Responsive table scroll */
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Agreement meter */
+    .agreement-meter {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .agreement-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .agreement-dot.agree { background: var(--yes); }
+    .agreement-dot.disagree { background: var(--no); }
+    .agreement-dot.dead { background: rgba(29, 29, 31, 0.15); }
+
+    /* Color coding for entries */
+    .entry-1 { color: var(--blue); }
+    .entry-2 { color: var(--purple); }
+    .entry-3 { color: var(--orange); }
+    .bg-entry-1 { background: var(--blue); }
+    .bg-entry-2 { background: var(--purple); }
+    .bg-entry-3 { background: var(--orange); }
+
+    /* Polymarket / Kalshi comparison mini bars */
+    .market-compare {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .market-source-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .polymarket-tag {
+      background: #1a1a2e;
+      color: #7c3aed;
+    }
+
+    .kalshi-tag {
+      background: #0f172a;
+      color: #38bdf8;
+    }
+
+    .sportsbook-tag {
+      background: #1a2e1a;
+      color: var(--yes);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>March Madness 2026</h1>
+      <p class="subtitle">SigmaEtaMadness Pool &mdash; Bracket Comparison + Market Odds</p>
+      <span class="tournament-stage">Sweet 16 &mdash; March 23, 2026</span>
+    </header>
+
+    <!-- Score Overview -->
+    <div class="section">
+      <h2 class="section-title">Bracket Overview</h2>
+      <div class="score-grid" id="score-grid"></div>
+    </div>
+
+    <!-- Path to Championship -->
+    <div class="section">
+      <h2 class="section-title">
+        Path to Championship
+        <span class="tag" style="background: var(--purple-light); color: var(--purple);">Remaining Picks</span>
+      </h2>
+      <div class="path-grid" id="path-grid"></div>
+    </div>
+
+    <!-- Controversial Matchups -->
+    <div class="section">
+      <h2 class="section-title">
+        Controversial Matchups
+        <span class="tag" style="background: var(--orange-light); color: var(--orange);">Most Disagreed</span>
+      </h2>
+      <p style="font-size: 13px; color: rgba(29,29,31,0.5); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace;">
+        Matchups where brackets disagree, ranked by controversy score (higher = more disagreement)
+      </p>
+      <div id="controversy-list"></div>
+    </div>
+
+    <!-- Championship Odds -->
+    <div class="section">
+      <h2 class="section-title">
+        Championship Win Probability
+        <span class="tag" style="background: var(--blue-light); color: var(--blue);">Prediction Markets</span>
+      </h2>
+      <div class="odds-grid" id="odds-grid"></div>
+    </div>
+
+    <!-- Sweet 16 Matchup Comparison -->
+    <div class="section">
+      <h2 class="section-title">Round-by-Round Picks</h2>
+      <div class="round-tabs" id="round-tabs"></div>
+      <div id="round-contents"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Data: ESPN Gambit API, Polymarket, Kalshi, FanDuel/DraftKings &mdash; Updated March 23, 2026</p>
+    </footer>
+  </div>
+
+  <script>
+    // ========================================================================
+    // DATA
+    // ========================================================================
+
+    const entries = [
+      {
+        id: 1,
+        name: "Picks 1",
+        owner: "ESPNFAN8671265117",
+        entryId: "60b90d90-238c-11f1-aedd-454352950998",
+        champion: { team: "Houston", seed: 2 },
+        score: 500,
+        percentile: 94.54,
+        rank: 1506910,
+        record: { w: 38, l: 11 },
+        pointsLost: 180,
+        remainingPossible: 1240,
+        maxPossible: 1740,
+        roundScores: {
+          r64: { pts: 260, w: 26, l: 6 },
+          r32: { pts: 240, w: 12, l: 4 },
+          s16: { pts: 0, w: 0, l: 1 },
+          e8: { pts: 0, w: 0, l: 0 },
+          ff: { pts: 0, w: 0, l: 0 },
+          ch: { pts: 0, w: 0, l: 0 },
+        },
+        groupRank: 2,
+        color: "var(--blue)",
+        bgColor: "var(--blue-light)",
+      },
+      {
+        id: 2,
+        name: "armpicks",
+        owner: "ESPNFAN7687896869",
+        entryId: "54ac5910-236b-11f1-a9b7-91d2aa9791a9",
+        champion: { team: "Michigan", seed: 1 },
+        score: 510,
+        percentile: 96.98,
+        rank: 831602,
+        record: { w: 39, l: 11 },
+        pointsLost: 210,
+        remainingPossible: 1200,
+        maxPossible: 1710,
+        roundScores: {
+          r64: { pts: 270, w: 27, l: 5 },
+          r32: { pts: 240, w: 12, l: 4 },
+          s16: { pts: 0, w: 0, l: 2 },
+          e8: { pts: 0, w: 0, l: 0 },
+          ff: { pts: 0, w: 0, l: 0 },
+          ch: { pts: 0, w: 0, l: 0 },
+        },
+        groupRank: 1,
+        color: "var(--purple)",
+        bgColor: "var(--purple-light)",
+      },
+      {
+        id: 3,
+        name: "iLoveUCLA2",
+        owner: "espn90139168",
+        entryId: "f361a0d0-2355-11f1-afca-ddfa712ab825",
+        champion: { team: "Michigan", seed: 1 },
+        score: 500,
+        percentile: 94.54,
+        rank: 1506910,
+        record: { w: 39, l: 10 },
+        pointsLost: 180,
+        remainingPossible: 1240,
+        maxPossible: 1740,
+        roundScores: {
+          r64: { pts: 280, w: 28, l: 4 },
+          r32: { pts: 220, w: 11, l: 5 },
+          s16: { pts: 0, w: 0, l: 1 },
+          e8: { pts: 0, w: 0, l: 0 },
+          ff: { pts: 0, w: 0, l: 0 },
+          ch: { pts: 0, w: 0, l: 0 },
+        },
+        groupRank: 2,
+        color: "var(--orange)",
+        bgColor: "var(--orange-light)",
+      }
+    ];
+
+    // Championship odds from prediction markets
+    const championshipOdds = [
+      { team: "Arizona", seed: 1, region: "West", polymarket: 21.5, kalshi: 18.5, sportsbook: 23.3, sportsOdds: "+330" },
+      { team: "Michigan", seed: 1, region: "Midwest", polymarket: 21.0, kalshi: 18.0, sportsbook: 25.0, sportsOdds: "+300" },
+      { team: "Duke", seed: 1, region: "East", polymarket: 18.0, kalshi: 20.0, sportsbook: 19.2, sportsOdds: "+420" },
+      { team: "Houston", seed: 2, region: "South", polymarket: 11.0, kalshi: 7.0, sportsbook: 11.8, sportsOdds: "+750" },
+      { team: "Purdue", seed: 2, region: "West", polymarket: 5.6, kalshi: 5.0, sportsbook: 6.3, sportsOdds: "+1500" },
+      { team: "Illinois", seed: 3, region: "South", polymarket: 6.1, kalshi: 5.5, sportsbook: 6.3, sportsOdds: "+1500" },
+      { team: "Iowa State", seed: 2, region: "Midwest", polymarket: 5.3, kalshi: 4.5, sportsbook: 5.6, sportsOdds: "+1700" },
+      { team: "UConn", seed: 2, region: "East", polymarket: 3.3, kalshi: 4.0, sportsbook: 3.6, sportsOdds: "+2700" },
+      { team: "Michigan St", seed: 3, region: "East", polymarket: 2.8, kalshi: 2.5, sportsbook: 3.2, sportsOdds: "+3000" },
+      { team: "St. John's", seed: 5, region: "East", polymarket: 2.6, kalshi: 2.0, sportsbook: 2.9, sportsOdds: "+3300" },
+      { team: "Arkansas", seed: 4, region: "West", polymarket: 2.1, kalshi: 1.5, sportsbook: 2.2, sportsOdds: "+4500" },
+      { team: "Tennessee", seed: 6, region: "Midwest", polymarket: 1.5, kalshi: 1.0, sportsbook: 1.8, sportsOdds: "+5500" },
+      { team: "Nebraska", seed: 4, region: "South", polymarket: 1.3, kalshi: 1.0, sportsbook: 1.6, sportsOdds: "+6000" },
+      { team: "Iowa", seed: 9, region: "South", polymarket: 1.0, kalshi: 0.8, sportsbook: 1.0, sportsOdds: "+10000" },
+      { team: "Alabama", seed: 4, region: "Midwest", polymarket: 1.0, kalshi: 0.5, sportsbook: 1.0, sportsOdds: "+10000" },
+      { team: "Texas", seed: 11, region: "West", polymarket: 0.5, kalshi: 0.3, sportsbook: 0.5, sportsOdds: "+20000" },
+    ];
+
+    // Sweet 16 matchups with odds
+    const sweet16Matchups = [
+      {
+        id: "s16-1", round: "Sweet 16", region: "East",
+        team1: { team: "Duke", seed: 1 }, team2: { team: "St. John's", seed: 5 },
+        team1WinProb: 73, team2WinProb: 27,
+        picks: ["Duke", "Duke", "Duke"],
+        status: "pending",
+      },
+      {
+        id: "s16-2", round: "Sweet 16", region: "East",
+        team1: { team: "UConn", seed: 2 }, team2: { team: "Michigan St", seed: 3 },
+        team1WinProb: 55, team2WinProb: 45,
+        picks: ["UConn", null, "Michigan St"], // null = dead pick (Louisville)
+        pickNotes: [null, "Louisville (eliminated)", null],
+        status: "pending",
+      },
+      {
+        id: "s16-3", round: "Sweet 16", region: "South",
+        team1: { team: "Iowa", seed: 9 }, team2: { team: "Nebraska", seed: 4 },
+        team1WinProb: 47, team2WinProb: 53,
+        picks: [null, null, null], // all picked Florida
+        pickNotes: ["Florida (eliminated)", "Florida (eliminated)", "Florida (eliminated)"],
+        status: "resolved", winner: "Iowa",
+      },
+      {
+        id: "s16-4", round: "Sweet 16", region: "South",
+        team1: { team: "Houston", seed: 2 }, team2: { team: "Illinois", seed: 3 },
+        team1WinProb: 58, team2WinProb: 42,
+        picks: ["Houston", "Houston", "Illinois"],
+        status: "pending",
+      },
+      {
+        id: "s16-5", round: "Sweet 16", region: "West",
+        team1: { team: "Arizona", seed: 1 }, team2: { team: "Arkansas", seed: 4 },
+        team1WinProb: 80, team2WinProb: 20,
+        picks: ["Arizona", "Arizona", "Arizona"],
+        status: "pending",
+      },
+      {
+        id: "s16-6", round: "Sweet 16", region: "West",
+        team1: { team: "Purdue", seed: 2 }, team2: { team: "Texas", seed: 11 },
+        team1WinProb: 74, team2WinProb: 26,
+        picks: ["Purdue", "Purdue", "Purdue"],
+        status: "pending",
+      },
+      {
+        id: "s16-7", round: "Sweet 16", region: "Midwest",
+        team1: { team: "Michigan", seed: 1 }, team2: { team: "Alabama", seed: 4 },
+        team1WinProb: 80, team2WinProb: 20,
+        picks: ["Michigan", "Michigan", "Michigan"],
+        status: "pending",
+      },
+      {
+        id: "s16-8", round: "Sweet 16", region: "Midwest",
+        team1: { team: "Iowa State", seed: 2 }, team2: { team: "Tennessee", seed: 6 },
+        team1WinProb: 65, team2WinProb: 35,
+        picks: ["Iowa State", "Iowa State", "Iowa State"],
+        status: "pending",
+      },
+    ];
+
+    // Elite 8 picks
+    const elite8Matchups = [
+      {
+        id: "e8-1", round: "Elite 8", region: "East",
+        matchupDesc: "East Region Final",
+        picks: ["Duke", "Duke", "Duke"],
+        pickSeeds: [1, 1, 1],
+        status: "pending",
+        marketFavorite: "Duke", marketProb: 56,
+      },
+      {
+        id: "e8-2", round: "Elite 8", region: "South",
+        matchupDesc: "South Region Final",
+        picks: ["Houston", "Houston", "Illinois"],
+        pickSeeds: [2, 2, 3],
+        status: "pending",
+        marketFavorite: "Houston", marketProb: 43,
+      },
+      {
+        id: "e8-3", round: "Elite 8", region: "West",
+        matchupDesc: "West Region Final",
+        picks: ["Arizona", "Purdue", "Arizona"],
+        pickSeeds: [1, 2, 1],
+        status: "pending",
+        marketFavorite: "Arizona", marketProb: 62,
+      },
+      {
+        id: "e8-4", round: "Elite 8", region: "Midwest",
+        matchupDesc: "Midwest Region Final",
+        picks: ["Iowa State", "Michigan", "Michigan"],
+        pickSeeds: [2, 1, 1],
+        status: "pending",
+        marketFavorite: "Michigan", marketProb: 59,
+      },
+    ];
+
+    // Final Four picks
+    const finalFourMatchups = [
+      {
+        id: "ff-1", round: "Final Four",
+        matchupDesc: "Semifinal: East vs South",
+        picks: ["Houston", "Duke", "Duke"],
+        pickSeeds: [2, 1, 1],
+        status: "pending",
+        note: "Duke (18%) vs Houston (11%) championship odds",
+      },
+      {
+        id: "ff-2", round: "Final Four",
+        matchupDesc: "Semifinal: West vs Midwest",
+        picks: ["Iowa State", "Michigan", "Michigan"],
+        pickSeeds: [2, 1, 1],
+        status: "pending",
+        note: "Michigan (21%) vs Iowa State (5%) championship odds",
+      },
+    ];
+
+    // Championship
+    const championship = {
+      id: "ch-1", round: "Championship",
+      matchupDesc: "National Championship",
+      picks: ["Houston", "Michigan", "Michigan"],
+      pickSeeds: [2, 1, 1],
+      status: "pending",
+      note: "Houston 11% vs Michigan 21% championship odds (Polymarket)",
+    };
+
+    // Controversial matchups (computed)
+    const controversies = [
+      {
+        matchup: "National Championship",
+        round: "Championship",
+        points: 320,
+        team1: "Houston", team1Seed: 2,
+        team2: "Michigan", team2Seed: 1,
+        picks: [
+          { entry: "Picks 1", pick: "Houston", color: "var(--blue)" },
+          { entry: "armpicks", pick: "Michigan", color: "var(--purple)" },
+          { entry: "iLoveUCLA2", pick: "Michigan", color: "var(--orange)" },
+        ],
+        split: "1-2",
+        controversyScore: 95,
+        marketContext: "Michigan leads 21.0% vs Houston 11.0% on Polymarket. Sportsbooks have Michigan +300 vs Houston +750. Market strongly favors Michigan.",
+        marketFav: "Michigan", marketFavProb: 21.0,
+        marketUnderdog: "Houston", marketUnderdogProb: 11.0,
+      },
+      {
+        matchup: "Final Four: East vs South",
+        round: "Final Four",
+        points: 160,
+        team1: "Duke", team1Seed: 1,
+        team2: "Houston", team2Seed: 2,
+        picks: [
+          { entry: "Picks 1", pick: "Houston", color: "var(--blue)" },
+          { entry: "armpicks", pick: "Duke", color: "var(--purple)" },
+          { entry: "iLoveUCLA2", pick: "Duke", color: "var(--orange)" },
+        ],
+        split: "1-2",
+        controversyScore: 88,
+        marketContext: "Duke 18.0% vs Houston 11.0% championship odds. Duke is the market favorite, but both need to win their regions first.",
+        marketFav: "Duke", marketFavProb: 18.0,
+        marketUnderdog: "Houston", marketUnderdogProb: 11.0,
+      },
+      {
+        matchup: "Final Four: West vs Midwest",
+        round: "Final Four",
+        points: 160,
+        team1: "Michigan", team1Seed: 1,
+        team2: "Iowa State", team2Seed: 2,
+        picks: [
+          { entry: "Picks 1", pick: "Iowa State", color: "var(--blue)" },
+          { entry: "armpicks", pick: "Michigan", color: "var(--purple)" },
+          { entry: "iLoveUCLA2", pick: "Michigan", color: "var(--orange)" },
+        ],
+        split: "1-2",
+        controversyScore: 85,
+        marketContext: "Michigan 21.0% vs Iowa State 5.3% championship odds. Michigan is the heavy market favorite with 4x the implied probability.",
+        marketFav: "Michigan", marketFavProb: 21.0,
+        marketUnderdog: "Iowa State", marketUnderdogProb: 5.3,
+      },
+      {
+        matchup: "Elite 8: Midwest Region",
+        round: "Elite 8",
+        points: 80,
+        team1: "Michigan", team1Seed: 1,
+        team2: "Iowa State", team2Seed: 2,
+        picks: [
+          { entry: "Picks 1", pick: "Iowa State", color: "var(--blue)" },
+          { entry: "armpicks", pick: "Michigan", color: "var(--purple)" },
+          { entry: "iLoveUCLA2", pick: "Michigan", color: "var(--orange)" },
+        ],
+        split: "1-2",
+        controversyScore: 78,
+        marketContext: "Michigan 59% advance probability vs Iowa State 29% (FOX). Michigan is the clear regional favorite.",
+        marketFav: "Michigan", marketFavProb: 59,
+        marketUnderdog: "Iowa State", marketUnderdogProb: 29,
+      },
+      {
+        matchup: "Elite 8: West Region",
+        round: "Elite 8",
+        points: 80,
+        team1: "Arizona", team1Seed: 1,
+        team2: "Purdue", team2Seed: 2,
+        picks: [
+          { entry: "Picks 1", pick: "Arizona", color: "var(--blue)" },
+          { entry: "armpicks", pick: "Purdue", color: "var(--purple)" },
+          { entry: "iLoveUCLA2", pick: "Arizona", color: "var(--orange)" },
+        ],
+        split: "2-1",
+        controversyScore: 72,
+        marketContext: "Arizona 61.5% Final Four probability vs Purdue 31.8% (FOX). Arizona has ~2x the advancement odds.",
+        marketFav: "Arizona", marketFavProb: 61.5,
+        marketUnderdog: "Purdue", marketUnderdogProb: 31.8,
+      },
+      {
+        matchup: "UConn vs Michigan St",
+        round: "Sweet 16",
+        points: 40,
+        team1: "UConn", team1Seed: 2,
+        team2: "Michigan St", team2Seed: 3,
+        picks: [
+          { entry: "Picks 1", pick: "UConn", color: "var(--blue)" },
+          { entry: "armpicks", pick: "N/A (Louisville)", color: "var(--purple)", dead: true },
+          { entry: "iLoveUCLA2", pick: "Michigan St", color: "var(--orange)" },
+        ],
+        split: "1-0-1",
+        controversyScore: 70,
+        marketContext: "UConn 55% vs Michigan St 45%. One of the closest games on the board. armpicks' Louisville pick is dead.",
+        marketFav: "UConn", marketFavProb: 55,
+        marketUnderdog: "Michigan St", marketUnderdogProb: 45,
+      },
+      {
+        matchup: "Houston vs Illinois",
+        round: "Sweet 16",
+        points: 40,
+        team1: "Houston", team1Seed: 2,
+        team2: "Illinois", team2Seed: 3,
+        picks: [
+          { entry: "Picks 1", pick: "Houston", color: "var(--blue)" },
+          { entry: "armpicks", pick: "Houston", color: "var(--purple)" },
+          { entry: "iLoveUCLA2", pick: "Illinois", color: "var(--orange)" },
+        ],
+        split: "2-1",
+        controversyScore: 62,
+        marketContext: "Houston 58% vs Illinois 42%. A competitive matchup. iLoveUCLA2 goes contrarian with the 3-seed.",
+        marketFav: "Houston", marketFavProb: 58,
+        marketUnderdog: "Illinois", marketUnderdogProb: 42,
+      },
+    ];
+
+    // ========================================================================
+    // RENDER FUNCTIONS
+    // ========================================================================
+
+    function renderScoreGrid() {
+      const grid = document.getElementById('score-grid');
+      const colors = [
+        { bg: 'var(--blue)', light: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.15)' },
+        { bg: 'var(--purple)', light: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.15)' },
+        { bg: 'var(--orange)', light: 'rgba(249,115,22,0.08)', border: 'rgba(249,115,22,0.15)' },
+      ];
+
+      entries.forEach((entry, i) => {
+        const c = colors[i];
+        const winPct = (entry.record.w / (entry.record.w + entry.record.l) * 100);
+        const champOdds = championshipOdds.find(o => o.team === entry.champion.team);
+
+        grid.innerHTML += `
+          <div class="card score-card" style="border-left: 4px solid ${c.bg};">
+            <div class="rank-badge" style="background: ${c.bg};">#${entry.groupRank}</div>
+            <div class="entry-name">${entry.name}</div>
+            <div class="champion-pick">Champion: (${entry.champion.seed}) ${entry.champion.team} &mdash; ${champOdds ? champOdds.polymarket + '%' : '?'} Polymarket</div>
+            <div class="score-big" style="color: ${c.bg};">${entry.score}</div>
+            <div class="score-label">Points &bull; ${entry.percentile}th percentile</div>
+            <div class="record-bar">
+              <div class="record-bar-fill" style="width: ${winPct}%; background: ${c.bg};"></div>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(29,29,31,0.4); margin-top: 4px;">
+              ${entry.record.w}W-${entry.record.l}L &bull; Max ${entry.maxPossible} pts possible
+            </div>
+            <div class="stats-row">
+              <div class="stat">
+                <span class="stat-value">${entry.remainingPossible}</span>
+                <span class="stat-label">Remaining</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value" style="color: var(--no);">${entry.pointsLost}</span>
+                <span class="stat-label">Lost</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">#${entry.rank.toLocaleString()}</span>
+                <span class="stat-label">Global Rank</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderPathGrid() {
+      const grid = document.getElementById('path-grid');
+      const colors = [
+        { bg: 'var(--blue)', light: 'rgba(59,130,246,0.08)' },
+        { bg: 'var(--purple)', light: 'rgba(139,92,246,0.08)' },
+        { bg: 'var(--orange)', light: 'rgba(249,115,22,0.08)' },
+      ];
+
+      const paths = [
+        { // Picks 1
+          s16: [
+            { team: "Duke", seed: 1, alive: true },
+            { team: "UConn", seed: 2, alive: true },
+            { team: "Florida", seed: 1, alive: false },
+            { team: "Houston", seed: 2, alive: true },
+            { team: "Arizona", seed: 1, alive: true },
+            { team: "Purdue", seed: 2, alive: true },
+            { team: "Michigan", seed: 1, alive: true },
+            { team: "Iowa State", seed: 2, alive: true },
+          ],
+          e8: ["Duke", "Houston", "Arizona", "Iowa State"],
+          ff: ["Houston", "Iowa State"],
+          champ: "Houston",
+        },
+        { // armpicks
+          s16: [
+            { team: "Duke", seed: 1, alive: true },
+            { team: "Louisville", seed: 6, alive: false },
+            { team: "Florida", seed: 1, alive: false },
+            { team: "Houston", seed: 2, alive: true },
+            { team: "Arizona", seed: 1, alive: true },
+            { team: "Purdue", seed: 2, alive: true },
+            { team: "Michigan", seed: 1, alive: true },
+            { team: "Iowa State", seed: 2, alive: true },
+          ],
+          e8: ["Duke", "Houston", "Purdue", "Michigan"],
+          ff: ["Duke", "Michigan"],
+          champ: "Michigan",
+        },
+        { // iLoveUCLA2
+          s16: [
+            { team: "Duke", seed: 1, alive: true },
+            { team: "Michigan St", seed: 3, alive: true },
+            { team: "Florida", seed: 1, alive: false },
+            { team: "Illinois", seed: 3, alive: true },
+            { team: "Arizona", seed: 1, alive: true },
+            { team: "Purdue", seed: 2, alive: true },
+            { team: "Michigan", seed: 1, alive: true },
+            { team: "Iowa State", seed: 2, alive: true },
+          ],
+          e8: ["Duke", "Illinois", "Arizona", "Michigan"],
+          ff: ["Duke", "Michigan"],
+          champ: "Michigan",
+        },
+      ];
+
+      entries.forEach((entry, i) => {
+        const c = colors[i];
+        const p = paths[i];
+        const champOdds = championshipOdds.find(o => o.team === p.champ);
+
+        let stepsHtml = '';
+
+        // Elite 8 picks
+        const regions = ["East", "South", "West", "Midwest"];
+        p.e8.forEach((team, j) => {
+          const odds = championshipOdds.find(o => o.team === team);
+          const aliveInPath = true; // E8 picks are still possible
+          stepsHtml += `
+            <div class="path-step">
+              <span class="path-round">E8</span>
+              <span class="path-dot" style="background: ${c.bg};"></span>
+              <span class="path-team">${team}</span>
+              <span class="path-prob" style="background: rgba(29,29,31,0.05); font-size: 10px;">${regions[j]}</span>
+            </div>
+          `;
+        });
+
+        // Final Four
+        p.ff.forEach((team, j) => {
+          stepsHtml += `
+            <div class="path-step">
+              <span class="path-round">FF</span>
+              <span class="path-dot" style="background: ${c.bg}; width: 10px; height: 10px;"></span>
+              <span class="path-team" style="font-size: 14px;">${team}</span>
+            </div>
+          `;
+        });
+
+        // Championship
+        stepsHtml += `
+          <div class="path-step" style="border-bottom: none; padding-bottom: 0;">
+            <span class="path-round" style="font-weight: 700;">WIN</span>
+            <span class="path-dot" style="background: ${c.bg}; width: 12px; height: 12px;"></span>
+            <span class="path-team" style="font-size: 15px; font-weight: 800;">${p.champ}</span>
+            <span class="path-prob" style="background: ${c.light}; color: ${c.bg}; font-weight: 700;">
+              ${champOdds ? champOdds.polymarket + '%' : '?'}
+            </span>
+          </div>
+        `;
+
+        grid.innerHTML += `
+          <div class="card path-card" style="border-top: 3px solid ${c.bg};">
+            <div class="path-title">${entry.name}</div>
+            <div class="path-champion">Score: ${entry.score} pts &bull; #${entry.groupRank} in pool</div>
+            ${stepsHtml}
+          </div>
+        `;
+      });
+    }
+
+    function renderControversies() {
+      const list = document.getElementById('controversy-list');
+
+      controversies.forEach(c => {
+        const picksHtml = c.picks.map(p => `
+          <div class="controversy-pick">
+            <div class="picker-name">${p.entry}</div>
+            <div class="pick-value" style="color: ${p.dead ? 'var(--no)' : p.color}; ${p.dead ? 'text-decoration: line-through; opacity: 0.5;' : ''}">
+              ${p.pick}
+            </div>
+          </div>
+        `).join('');
+
+        // Heat visualization
+        const heatDots = '&#x1F525;'.repeat(Math.ceil(c.controversyScore / 20));
+
+        list.innerHTML += `
+          <div class="card controversy-card">
+            <div class="controversy-header">
+              <div>
+                <div class="controversy-matchup">${c.matchup}</div>
+                <div class="controversy-round">${c.round} &bull; ${c.points} pts</div>
+              </div>
+              <div class="controversy-heat">${c.controversyScore}/100</div>
+            </div>
+            <div class="controversy-picks">${picksHtml}</div>
+            <div class="controversy-market">
+              <div class="market-label">Market Consensus</div>
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
+                    <span class="mono" style="font-size: 12px; font-weight: 600; color: var(--yes);">${c.marketFav} ${c.marketFavProb}%</span>
+                    <span class="mono" style="font-size: 12px; font-weight: 600; color: var(--no);">${c.marketUnderdog} ${c.marketUnderdogProb}%</span>
+                  </div>
+                  <div class="prob-bar">
+                    <div class="prob-bar-fill" style="width: ${(c.marketFavProb / (c.marketFavProb + c.marketUnderdogProb)) * 100}%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="font-size: 11px; color: rgba(29,29,31,0.5); margin-top: 6px;">${c.marketContext}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderOddsGrid() {
+      const grid = document.getElementById('odds-grid');
+      const maxProb = Math.max(...championshipOdds.map(o => o.polymarket));
+
+      championshipOdds.forEach(o => {
+        // Check if any entry has this team as champion
+        const pickedBy = entries.filter(e => e.champion.team === o.team).map(e => e.name);
+        const pickedLabel = pickedBy.length > 0
+          ? `<div style="font-size: 10px; margin-top: 6px; padding: 3px 8px; background: var(--yes-light); color: #15803d; border-radius: 4px; display: inline-block;">Champion pick: ${pickedBy.join(', ')}</div>`
+          : '';
+
+        grid.innerHTML += `
+          <div class="card odds-card">
+            <div class="team-header">
+              <span class="team-name">${o.team}</span>
+              <span class="team-seed">${o.region} (${o.seed})</span>
+            </div>
+            <div class="odds-row">
+              <span class="market-source-tag polymarket-tag">Poly</span>
+              <span class="odds-value" style="color: var(--purple);">${o.polymarket}%</span>
+            </div>
+            <div class="odds-bar">
+              <div class="odds-bar-fill" style="width: ${(o.polymarket / maxProb) * 100}%; background: var(--purple);"></div>
+            </div>
+            <div class="odds-row">
+              <span class="market-source-tag kalshi-tag">Kalshi</span>
+              <span class="odds-value" style="color: var(--blue);">${o.kalshi}%</span>
+            </div>
+            <div class="odds-bar">
+              <div class="odds-bar-fill" style="width: ${(o.kalshi / maxProb) * 100}%; background: var(--blue);"></div>
+            </div>
+            <div class="odds-row">
+              <span class="market-source-tag sportsbook-tag">Book</span>
+              <span class="odds-value">${o.sportsOdds}</span>
+            </div>
+            ${pickedLabel}
+          </div>
+        `;
+      });
+    }
+
+    function renderRounds() {
+      const tabsContainer = document.getElementById('round-tabs');
+      const contentsContainer = document.getElementById('round-contents');
+
+      const rounds = [
+        { key: 's16', label: 'Sweet 16', pts: 40, data: sweet16Matchups },
+        { key: 'e8', label: 'Elite 8', pts: 80, data: elite8Matchups },
+        { key: 'ff', label: 'Final Four', pts: 160, data: finalFourMatchups },
+        { key: 'ch', label: 'Championship', pts: 320, data: [championship] },
+      ];
+
+      rounds.forEach((round, ri) => {
+        tabsContainer.innerHTML += `
+          <button class="round-tab ${ri === 0 ? 'active' : ''}" onclick="switchRound('${round.key}')">${round.label}</button>
+        `;
+
+        let tableRows = '';
+        const data = round.data;
+
+        data.forEach(m => {
+          const entryNames = ["Picks 1", "armpicks", "iLoveUCLA2"];
+          const entryColors = ["var(--blue)", "var(--purple)", "var(--orange)"];
+
+          let pickCells = '';
+          const uniquePicks = [...new Set(m.picks.filter(p => p !== null))];
+          const isControversial = uniquePicks.length > 1;
+
+          m.picks.forEach((pick, pi) => {
+            const note = m.pickNotes ? m.pickNotes[pi] : null;
+            const isDead = pick === null;
+            const chipClass = isDead ? 'dead' : 'pending';
+            const displayPick = isDead ? (note || 'N/A') : pick;
+            const seed = m.pickSeeds ? m.pickSeeds[pi] : '';
+
+            pickCells += `
+              <td class="pick-cell">
+                <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: rgba(29,29,31,0.35); margin-bottom: 3px;">${entryNames[pi]}</div>
+                <span class="pick-chip ${chipClass}" style="${!isDead ? `border-left: 3px solid ${entryColors[pi]};` : ''}">
+                  ${seed ? `<span class="pick-seed">(${seed})</span>` : ''}
+                  ${displayPick}
+                </span>
+              </td>
+            `;
+          });
+
+          // Agreement indicator
+          const agreeCount = m.picks.filter(p => p === m.picks[0] && p !== null).length;
+          const allSame = uniquePicks.length <= 1 && m.picks.every(p => p !== null);
+          const agreeBadge = allSame
+            ? '<span style="font-size: 10px; padding: 2px 8px; background: var(--yes-light); color: #15803d; border-radius: 10px; font-weight: 600;">Unanimous</span>'
+            : isControversial
+              ? '<span style="font-size: 10px; padding: 2px 8px; background: var(--orange-light); color: var(--orange); border-radius: 10px; font-weight: 600;">Split</span>'
+              : '';
+
+          // Market odds cell
+          let oddsCell = '';
+          if (round.key === 's16' && m.team1WinProb) {
+            oddsCell = `
+              <td class="odds-cell">
+                <div class="prob-bar-container" style="width: 120px;">
+                  <div class="prob-bar-labels">
+                    <span class="prob-bar-label" style="color: var(--yes); font-size: 10px;">${m.team1.team} ${m.team1WinProb}%</span>
+                  </div>
+                  <div class="prob-bar" style="height: 6px;">
+                    <div class="prob-bar-fill" style="width: ${m.team1WinProb}%; height: 6px;"></div>
+                  </div>
+                </div>
+              </td>
+            `;
+          } else if (m.marketProb) {
+            oddsCell = `
+              <td class="odds-cell">
+                <div style="font-size: 11px; font-family: 'JetBrains Mono', monospace;">
+                  <span style="color: var(--yes); font-weight: 600;">${m.marketFavorite}</span>
+                  <span style="color: rgba(29,29,31,0.4);"> ${m.marketProb}%</span>
+                </div>
+              </td>
+            `;
+          } else if (m.note) {
+            oddsCell = `
+              <td class="odds-cell">
+                <div style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: rgba(29,29,31,0.4); max-width: 140px;">${m.note}</div>
+              </td>
+            `;
+          } else {
+            oddsCell = `<td class="odds-cell"></td>`;
+          }
+
+          // Matchup description
+          let matchupLabel = '';
+          if (round.key === 's16') {
+            matchupLabel = `
+              <td class="matchup-cell">
+                <div class="matchup-label">${m.region} Region</div>
+                <div class="matchup-teams">
+                  <span class="seed">(${m.team1.seed})</span>${m.team1.team} vs <span class="seed">(${m.team2.seed})</span>${m.team2.team}
+                </div>
+                ${m.status === 'resolved' ? `<div style="font-size: 10px; color: var(--yes); font-weight: 600; margin-top: 2px;">Winner: ${m.winner}</div>` : ''}
+              </td>
+            `;
+          } else {
+            matchupLabel = `
+              <td class="matchup-cell">
+                <div class="matchup-label">${m.region || ''}</div>
+                <div class="matchup-teams">${m.matchupDesc}</div>
+              </td>
+            `;
+          }
+
+          tableRows += `
+            <tr${m.status === 'resolved' ? ' style="opacity: 0.5;"' : ''}>
+              ${matchupLabel}
+              ${pickCells}
+              ${oddsCell}
+              <td>${agreeBadge}</td>
+            </tr>
+          `;
+        });
+
+        contentsContainer.innerHTML += `
+          <div class="round-content ${ri === 0 ? 'active' : ''}" id="round-${round.key}">
+            <div class="card" style="overflow: hidden;">
+              <div class="table-scroll">
+                <table class="matchup-table">
+                  <thead>
+                    <tr>
+                      <th>Matchup</th>
+                      <th>Picks 1</th>
+                      <th>armpicks</th>
+                      <th>iLoveUCLA2</th>
+                      <th>Market</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${tableRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function switchRound(key) {
+      document.querySelectorAll('.round-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.round-content').forEach(c => c.classList.remove('active'));
+
+      event.target.classList.add('active');
+      document.getElementById(`round-${key}`).classList.add('active');
+    }
+
+    // ========================================================================
+    // INIT
+    // ========================================================================
+
+    renderScoreGrid();
+    renderPathGrid();
+    renderControversies();
+    renderOddsGrid();
+    renderRounds();
+  </script>
+</body>
+</html>

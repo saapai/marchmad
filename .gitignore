@@ -1,0 +1,17 @@
+# Data files (large JSON responses)
+challenge.json
+challenge_p*.json
+entry*.json
+outcome_map.json
+proposition_map.json
+bracket_data.txt
+
+# Research notes
+*.md
+!README.md
+
+# Claude
+.claude/
+
+# OS
+.DS_Store
