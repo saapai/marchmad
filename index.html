@@ -3,1061 +3,695 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SigmaEtaMadness - March Madness 2026</title>
+  <title>SigmaEtaMadness &middot; March Madness 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-0: #09090b;
-      --bg-1: #111113;
-      --bg-2: #1a1a1d;
-      --bg-3: #232326;
-      --bg-4: #2c2c30;
-      --text-0: #fafafa;
-      --text-1: #e4e4e7;
-      --text-2: #a1a1aa;
-      --text-3: #71717a;
-      --text-4: #52525b;
-      --border: rgba(255,255,255,0.06);
-      --border-strong: rgba(255,255,255,0.12);
-      --green: #22c55e;
-      --green-dim: rgba(34,197,94,0.15);
-      --red: #ef4444;
-      --red-dim: rgba(239,68,68,0.15);
-      --blue: #3b82f6;
-      --blue-dim: rgba(59,130,246,0.12);
-      --purple: #a78bfa;
-      --purple-dim: rgba(167,139,250,0.12);
-      --orange: #f97316;
-      --orange-dim: rgba(249,115,22,0.12);
-      --gold: #eab308;
-      --gold-dim: rgba(234,179,8,0.12);
-      --cyan: #06b6d4;
-      --cyan-dim: rgba(6,182,212,0.12);
+      --bg-0: #0a0a0c;
+      --bg-1: #121214;
+      --bg-2: #1a1a1e;
+      --bg-3: #222228;
+      --bg-4: #2e2e36;
+      --text-0: #f4f4f6;
+      --text-1: #dcdce0;
+      --text-2: #9898a4;
+      --text-3: #6a6a78;
+      --text-4: #48485a;
+      --border: rgba(255,255,255,0.05);
+      --border-s: rgba(255,255,255,0.09);
+      --emerald: #34d399;
+      --emerald-dim: rgba(52,211,153,0.10);
+      --rose: #fb7185;
+      --rose-dim: rgba(251,113,133,0.10);
+      --sky: #7dd3fc;
+      --sky-dim: rgba(125,211,252,0.10);
+      --violet: #c4b5fd;
+      --violet-dim: rgba(196,181,253,0.10);
+      --amber: #fcd34d;
+      --amber-dim: rgba(252,211,77,0.10);
+      --teal: #5eead4;
+      --teal-dim: rgba(94,234,212,0.10);
+      --orange: #fdba74;
+      --orange-dim: rgba(253,186,116,0.10);
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--bg-0);
-      color: var(--text-1);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
+      background: var(--bg-0); color: var(--text-1);
+      line-height: 1.5; -webkit-font-smoothing: antialiased;
     }
-
     .mono { font-family: 'JetBrains Mono', monospace; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    /* Header */
+    .header { padding: 36px 0 28px; border-bottom: 1px solid var(--border); }
+    .header h1 { font-size: 24px; font-weight: 800; color: var(--text-0); letter-spacing: -0.3px; }
+    .header .sub { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-3); margin-top:3px; }
 
-    /* ── Header ─────────────────────────────────────── */
-    .header {
-      padding: 40px 0 32px;
-      border-bottom: 1px solid var(--border);
+    /* Section */
+    .section { margin: 36px 0; }
+    .section-head {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:14px; flex-wrap:wrap; gap:8px;
     }
-    .header-top {
-      display: flex; align-items: flex-end; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
-    }
-    .header h1 {
-      font-size: 28px; font-weight: 800; color: var(--text-0);
-      letter-spacing: -0.5px;
-    }
-    .header .pool-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px; color: var(--text-3);
-    }
-    .header .stage-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 14px; border-radius: 6px;
-      background: var(--green-dim); color: var(--green);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .header .stage-badge::before {
-      content: ''; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green); animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+    .section-title { font-size:17px; font-weight:700; color:var(--text-0); }
+    .tag {
+      font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+      padding:3px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.5px;
     }
 
-    /* ── Stats Bar ──────────────────────────────────── */
-    .stats-bar {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1px; background: var(--border);
-      border-radius: 10px; overflow: hidden;
-      margin: 24px 0;
+    /* Card */
+    .card { background:var(--bg-1); border-radius:10px; border:1px solid var(--border); }
+
+    /* Table */
+    .tw { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .tb { width:100%; border-collapse:collapse; min-width:900px; }
+    .tb th {
+      font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+      text-transform:uppercase; letter-spacing:.8px; color:var(--text-4);
+      padding:11px 12px; text-align:left;
+      border-bottom:1px solid var(--border-s);
+      position:sticky; top:0; background:var(--bg-1); z-index:1;
     }
-    .stat-item {
-      background: var(--bg-1); padding: 16px 18px;
+    .tb th.r, .tb td.r { text-align:right; }
+    .tb th.c, .tb td.c { text-align:center; }
+    .tb td {
+      padding:9px 12px; border-bottom:1px solid var(--border);
+      font-size:13px; vertical-align:middle;
     }
-    .stat-item .stat-value {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 22px; font-weight: 700; color: var(--text-0);
+    .tb tr:hover td { background:rgba(255,255,255,0.015); }
+    .tb tr.top td { background:rgba(252,211,77,0.03); }
+
+    .rk { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:var(--text-3); }
+    .rk.g { color:var(--amber); }
+    .ch-badge {
+      display:inline-flex; align-items:center; padding:3px 8px; border-radius:5px;
+      font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; white-space:nowrap;
     }
-    .stat-item .stat-label {
-      font-size: 11px; color: var(--text-3);
-      text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;
+    .nm { font-weight:600; color:var(--text-0); }
+    .ow { font-size:11px; color:var(--text-4); margin-top:1px; }
+    .pts { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; color:var(--text-0); }
+    .pct { font-family:'JetBrains Mono',monospace; font-size:12px; }
+    .rec { font-family:'JetBrains Mono',monospace; font-size:12px; }
+    .rec .w { color:var(--emerald); }
+    .rec .l { color:var(--rose); }
+    .rpts { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-2); }
+    .proj {
+      font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600;
+    }
+    .mx { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-4); }
+    .mbar { width:52px; height:3px; border-radius:2px; background:var(--bg-3); overflow:hidden; margin-top:2px; }
+    .mbar-f { height:100%; border-radius:2px; }
+
+    /* Champ grid */
+    .cg { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:8px; }
+    .cc {
+      padding:13px; border-radius:8px; background:var(--bg-2);
+      border:1px solid var(--border); display:flex; flex-direction:column; gap:7px;
+    }
+    .cc .tr { display:flex; justify-content:space-between; align-items:baseline; }
+    .cc .tn { font-weight:700; font-size:14px; color:var(--text-0); }
+    .cc .ts { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-4); padding:1px 5px; border-radius:3px; background:var(--bg-3); }
+    .cc .br { display:flex; align-items:center; gap:6px; }
+    .cc .bl { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-4); width:30px; text-align:right; flex-shrink:0; }
+    .cb { flex:1; height:5px; border-radius:3px; background:var(--bg-3); overflow:hidden; }
+    .cb-f { height:100%; border-radius:3px; }
+    .cc .bp { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; width:36px; flex-shrink:0; }
+
+    /* Matchup cards — full width */
+    .mc-list { display:flex; flex-direction:column; gap:10px; }
+    .mc {
+      display:grid; grid-template-columns:1fr auto 1fr;
+      border-radius:10px; overflow:hidden; border:1px solid var(--border);
+      background:var(--bg-1);
+    }
+    .mc-side {
+      padding:16px 18px; display:flex; flex-direction:column; gap:6px;
+    }
+    .mc-side.right { text-align:right; }
+    .mc-mid {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:12px 14px; background:var(--bg-2); min-width:80px; gap:4px;
+      border-left:1px solid var(--border); border-right:1px solid var(--border);
+    }
+    .mc-round {
+      font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600;
+      text-transform:uppercase; letter-spacing:.8px; color:var(--text-4);
+    }
+    .mc-vs {
+      font-weight:800; font-size:14px; color:var(--text-3);
+    }
+    .mc-pts-label {
+      font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-4);
+    }
+    .mc-score {
+      font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+      padding:3px 8px; border-radius:5px;
+    }
+    .mc-team {
+      font-weight:700; font-size:17px; color:var(--text-0);
+    }
+    .mc-seed {
+      font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-4); font-weight:400;
+    }
+    .mc-stats {
+      display:flex; gap:14px; flex-wrap:wrap;
+      font-family:'JetBrains Mono',monospace; font-size:11px;
+    }
+    .mc-side.right .mc-stats { justify-content:flex-end; }
+    .mc-stat-label { color:var(--text-4); }
+    .mc-stat-val { font-weight:600; }
+    .mc-pickers {
+      display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;
+    }
+    .mc-side.right .mc-pickers { justify-content:flex-end; }
+    .mc-picker {
+      font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:500;
+      padding:2px 7px; border-radius:4px; background:var(--bg-3); color:var(--text-2);
+    }
+    .mc-dead-section {
+      grid-column:1/-1; padding:8px 18px;
+      background:var(--bg-2); border-top:1px solid var(--border);
+      display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+    }
+    .mc-dead-label {
+      font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-4);
+      margin-right:4px;
+    }
+    .mc-dead-pick {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      padding:2px 6px; border-radius:3px;
+      background:var(--rose-dim); color:var(--rose); text-decoration:line-through;
     }
 
-    /* ── Section ────────────────────────────────────── */
-    .section { margin-bottom: 48px; }
-    .section-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+    /* Split bar within matchup */
+    .mc-splitbar {
+      grid-column:1/-1; padding:0 18px 12px;
+      background:var(--bg-1);
     }
-    .section-title {
-      font-size: 18px; font-weight: 700; color: var(--text-0);
+    .mc-sb {
+      display:flex; height:6px; border-radius:3px; overflow:hidden; gap:1px;
     }
-    .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; font-weight: 600; padding: 3px 8px;
-      border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    .mc-sb-seg { min-width:2px; }
+
+    /* Resolved overlay */
+    .mc.resolved { opacity:.45; }
+    .mc .resolved-badge {
+      font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+      padding:2px 7px; border-radius:4px;
     }
 
-    /* ── Card ───────────────────────────────────────── */
-    .card {
-      background: var(--bg-1); border-radius: 10px;
-      border: 1px solid var(--border);
-    }
+    /* Footer */
+    footer { padding:20px 0; border-top:1px solid var(--border); margin-top:24px; }
+    footer p { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-4); }
 
-    /* ── Leaderboard Table ──────────────────────────── */
-    .lb-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .lb-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-    .lb-table th {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      color: var(--text-4); padding: 12px 14px;
-      text-align: left; border-bottom: 1px solid var(--border-strong);
-      position: sticky; top: 0; background: var(--bg-1); z-index: 1;
-    }
-    .lb-table th.right, .lb-table td.right { text-align: right; }
-    .lb-table th.center, .lb-table td.center { text-align: center; }
-    .lb-table td {
-      padding: 10px 14px; border-bottom: 1px solid var(--border);
-      font-size: 13px; vertical-align: middle;
-    }
-    .lb-table tr:hover td { background: rgba(255,255,255,0.02); }
-    .lb-table tr.leader td { background: rgba(234,179,8,0.04); }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:5px; height:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:var(--bg-4); border-radius:3px; }
 
-    .lb-rank {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700; font-size: 14px; color: var(--text-3);
-      width: 36px; text-align: center;
+    @media(max-width:700px) {
+      .mc { grid-template-columns:1fr; }
+      .mc-mid { flex-direction:row; border-left:none; border-right:none; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+      .mc-side.right { text-align:left; }
+      .mc-side.right .mc-stats { justify-content:flex-start; }
+      .mc-side.right .mc-pickers { justify-content:flex-start; }
+      .cg { grid-template-columns:repeat(2,1fr); }
     }
-    .lb-rank.gold { color: var(--gold); }
-
-    .lb-champ-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 8px; border-radius: 5px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 600;
-    }
-
-    .lb-name { font-weight: 600; color: var(--text-0); }
-    .lb-owner { font-size: 11px; color: var(--text-4); margin-top: 1px; }
-
-    .lb-pts {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 16px; font-weight: 700; color: var(--text-0);
-    }
-
-    .lb-pct {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 500;
-    }
-
-    .lb-record {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; color: var(--text-2);
-    }
-    .lb-record .w { color: var(--green); }
-    .lb-record .l { color: var(--red); }
-
-    .lb-round-pts {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; color: var(--text-2);
-    }
-
-    .lb-max {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; color: var(--text-3);
-    }
-
-    /* Mini bar in table */
-    .mini-bar {
-      width: 60px; height: 4px; border-radius: 2px;
-      background: var(--bg-3); overflow: hidden; margin-top: 3px;
-    }
-    .mini-bar-fill {
-      height: 100%; border-radius: 2px;
-      transition: width 0.5s ease;
-    }
-
-    /* ── Champion Distribution ──────────────────────── */
-    .champ-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 8px;
-    }
-    .champ-card {
-      padding: 14px; border-radius: 8px; background: var(--bg-2);
-      border: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .champ-card .team-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-    }
-    .champ-card .team-name { font-weight: 700; font-size: 15px; color: var(--text-0); }
-    .champ-card .team-seed {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; color: var(--text-4); padding: 1px 5px;
-      border-radius: 3px; background: var(--bg-3);
-    }
-    .champ-card .bar-row {
-      display: flex; align-items: center; gap: 8px;
-    }
-    .champ-card .bar-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; color: var(--text-4);
-      width: 32px; text-align: right; flex-shrink: 0;
-    }
-    .champ-bar {
-      flex: 1; height: 6px; border-radius: 3px;
-      background: var(--bg-3); overflow: hidden;
-    }
-    .champ-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
-    .champ-card .bar-pct {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 600; width: 38px; flex-shrink: 0;
-    }
-
-    /* ── Matchup Cards ──────────────────────────────── */
-    .matchup-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 12px;
-    }
-    .matchup-card {
-      padding: 18px; position: relative;
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    .matchup-card.resolved { opacity: 0.5; }
-    .matchup-region {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; color: var(--text-4);
-      text-transform: uppercase; letter-spacing: 1px;
-    }
-    .matchup-vs {
-      display: flex; align-items: stretch; gap: 0;
-      border-radius: 8px; overflow: hidden;
-    }
-    .matchup-team {
-      flex: 1; padding: 10px 12px;
-      display: flex; flex-direction: column; gap: 2px;
-    }
-    .matchup-team.left { background: var(--bg-2); }
-    .matchup-team.right { background: var(--bg-3); text-align: right; }
-    .matchup-team .t-name { font-weight: 700; font-size: 15px; color: var(--text-0); }
-    .matchup-team .t-seed {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; color: var(--text-4);
-    }
-    .matchup-team .t-prob {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 600;
-    }
-
-    /* Pool split bar */
-    .split-bar-container { padding: 0 2px; }
-    .split-bar-header {
-      display: flex; justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; color: var(--text-4); margin-bottom: 4px;
-    }
-    .split-bar {
-      display: flex; height: 8px; border-radius: 4px;
-      overflow: hidden; gap: 1px;
-    }
-    .split-segment { transition: width 0.5s; min-width: 2px; }
-    .split-segment:first-child { border-radius: 4px 0 0 4px; }
-    .split-segment:last-child { border-radius: 0 4px 4px 0; }
-
-    /* Market bar */
-    .market-bar-row {
-      display: flex; align-items: center; gap: 8px; padding: 0 2px;
-    }
-    .market-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.5px; padding: 2px 6px; border-radius: 3px;
-      flex-shrink: 0;
-    }
-    .market-bar {
-      flex: 1; height: 4px; border-radius: 2px;
-      background: var(--bg-3); overflow: hidden;
-    }
-    .market-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
-    .market-pct {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 600; min-width: 32px; text-align: right;
-    }
-
-    /* Status pills */
-    .status-resolved {
-      position: absolute; top: 12px; right: 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; font-weight: 600;
-      padding: 2px 8px; border-radius: 4px;
-      text-transform: uppercase;
-    }
-
-    /* ── Deep Rounds Flow ───────────────────────────── */
-    .flow-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 900px) {
-      .flow-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 500px) {
-      .flow-grid { grid-template-columns: 1fr; }
-    }
-
-    .flow-column { display: flex; flex-direction: column; gap: 10px; }
-    .flow-column-header {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 600; color: var(--text-3);
-      text-transform: uppercase; letter-spacing: 1px;
-      padding-bottom: 8px; border-bottom: 1px solid var(--border);
-      margin-bottom: 4px; text-align: center;
-    }
-    .flow-item {
-      background: var(--bg-2); border-radius: 8px;
-      border: 1px solid var(--border); padding: 12px;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .flow-item-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; color: var(--text-4);
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .flow-picks {
-      display: flex; flex-wrap: wrap; gap: 4px;
-    }
-    .flow-pick {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 600;
-      padding: 3px 8px; border-radius: 5px;
-    }
-    .flow-pick .count {
-      font-weight: 400; opacity: 0.6; margin-left: 2px;
-    }
-
-    /* ── Controversial ──────────────────────────────── */
-    .controversy-list { display: flex; flex-direction: column; gap: 10px; }
-    .controversy-item {
-      padding: 18px; display: flex; gap: 16px;
-      align-items: flex-start; flex-wrap: wrap;
-    }
-    .controversy-score {
-      width: 44px; height: 44px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 16px; font-weight: 700; flex-shrink: 0;
-    }
-    .controversy-body { flex: 1; min-width: 200px; }
-    .controversy-matchup-name { font-weight: 700; font-size: 15px; color: var(--text-0); }
-    .controversy-round-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; color: var(--text-4);
-    }
-    .controversy-bars { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
-    .controversy-bar-row {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .controversy-bar-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 600;
-      min-width: 100px; color: var(--text-1);
-    }
-    .controversy-bar {
-      flex: 1; height: 10px; border-radius: 5px;
-      background: var(--bg-3); overflow: hidden; max-width: 300px;
-    }
-    .controversy-bar-fill {
-      height: 100%; border-radius: 5px; transition: width 0.5s;
-    }
-    .controversy-bar-pct {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 600;
-      min-width: 52px;
-    }
-    .controversy-market-note {
-      font-size: 11px; color: var(--text-4); margin-top: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      padding: 6px 10px; background: var(--bg-3); border-radius: 6px;
-    }
-
-    /* ── Footer ─────────────────────────────────────── */
-    footer {
-      padding: 24px 0; border-top: 1px solid var(--border); margin-top: 32px;
-    }
-    footer p {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; color: var(--text-4);
-    }
-
-    /* ── Responsive ─────────────────────────────────── */
-    @media (max-width: 640px) {
-      .matchup-grid { grid-template-columns: 1fr; }
-      .champ-grid { grid-template-columns: repeat(2, 1fr); }
-      .header h1 { font-size: 22px; }
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    /* ── Scrollbar ──────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: var(--bg-4); border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-4); }
   </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Header -->
   <div class="header">
-    <div class="header-top">
-      <div>
-        <h1>March Madness 2026</h1>
-        <div class="pool-name">SigmaEtaMadness &middot; 22 brackets</div>
-      </div>
-      <span class="stage-badge">Sweet 16 &mdash; Live</span>
-    </div>
+    <h1>SigmaEtaMadness</h1>
+    <div class="sub">March Madness 2026 &middot; Sweet 16 &middot; 22 brackets</div>
   </div>
-
-  <!-- Stats Bar -->
-  <div class="stats-bar" id="stats-bar"></div>
 
   <!-- Leaderboard -->
   <div class="section">
-    <div class="section-header">
+    <div class="section-head">
       <span class="section-title">Leaderboard</span>
-      <span class="section-tag" style="background:var(--gold-dim);color:var(--gold);">Pool Rankings</span>
     </div>
-    <div class="card">
-      <div class="lb-wrapper">
-        <table class="lb-table" id="lb-table">
-          <thead><tr>
-            <th class="center">#</th>
-            <th>Champ</th>
-            <th>Bracket</th>
-            <th class="right">Pts</th>
-            <th class="right">Pct</th>
-            <th class="right">Max</th>
-            <th class="right">Record</th>
-            <th class="right">R64</th>
-            <th class="right">R32</th>
-            <th class="right">S16</th>
-          </tr></thead>
-          <tbody id="lb-body"></tbody>
-        </table>
-      </div>
-    </div>
+    <div class="card"><div class="tw"><table class="tb" id="lb"><thead><tr>
+      <th class="c">#</th><th>Champ</th><th>Bracket</th>
+      <th class="r">Pts</th><th class="r">Pct</th><th class="r">Proj</th>
+      <th class="r">Max</th><th class="r">Record</th><th class="r">R64</th><th class="r">R32</th>
+    </tr></thead><tbody id="lb-body"></tbody></table></div></div>
   </div>
 
-  <!-- Champion Distribution: Pool vs Market -->
+  <!-- Championship: Pool vs Market -->
   <div class="section">
-    <div class="section-header">
+    <div class="section-head">
       <span class="section-title">Championship Picks: Pool vs Market</span>
-      <span class="section-tag" style="background:var(--purple-dim);color:var(--purple);">Prediction Markets</span>
+      <span class="tag" style="background:var(--violet-dim);color:var(--violet);">Win Probability</span>
     </div>
-    <div class="champ-grid" id="champ-grid"></div>
+    <div class="cg" id="champ-grid"></div>
   </div>
 
-  <!-- Sweet 16 Matchups -->
+  <!-- All Upcoming Matchups -->
   <div class="section">
-    <div class="section-header">
-      <span class="section-title">Sweet 16 Matchups</span>
-      <span class="section-tag" style="background:var(--green-dim);color:var(--green);">Game-by-Game</span>
+    <div class="section-head">
+      <span class="section-title">All Upcoming Games</span>
+      <span class="tag" style="background:var(--orange-dim);color:var(--orange);">Ranked by Controversy</span>
     </div>
-    <div class="matchup-grid" id="matchup-grid"></div>
+    <div class="mc-list" id="mc-list"></div>
   </div>
 
-  <!-- Deep Rounds: E8 → FF → Championship -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-title">Deep Rounds: Pool Consensus</span>
-      <span class="section-tag" style="background:var(--blue-dim);color:var(--blue);">E8 &rarr; FF &rarr; Champ</span>
-    </div>
-    <div class="card" style="padding: 20px;">
-      <div class="flow-grid" id="flow-grid"></div>
-    </div>
-  </div>
-
-  <!-- Controversial Matchups -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-title">Most Controversial Matchups</span>
-      <span class="section-tag" style="background:var(--orange-dim);color:var(--orange);">Disagreements</span>
-    </div>
-    <div class="controversy-list" id="controversy-list"></div>
-  </div>
-
-  <footer>
-    <p>Data: ESPN Gambit API, Polymarket, Kalshi, FanDuel &middot; March 23, 2026</p>
-  </footer>
+  <footer><p>ESPN Gambit API &middot; Polymarket &middot; Kalshi &middot; FanDuel &middot; March 23 2026</p></footer>
 </div>
 
 <script>
-// ====================================================================
+// ============================================================
 // DATA
-// ====================================================================
-
-const brackets = [
-  { name:"armpicks", owner:"Armaan Bassi", champ:"Michigan", champSeed:1, score:510, pct:96.98, rank:831602, w:39, l:11, lost:210, rem:1200, max:1710, r64:270, r32:240, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","Louisville","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Purdue","Michigan"], ffp:["Duke","Michigan"] },
-  { name:"Picks 1", owner:"Saathvik Pai", champ:"Houston", champSeed:2, score:500, pct:94.54, rank:1506910, w:38, l:11, lost:180, rem:1240, max:1740, r64:260, r32:240, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Arizona","Iowa State"], ffp:["Houston","Iowa State"] },
-  { name:"iLoveUCLA2", owner:"Christian Millar", champ:"Michigan", champSeed:1, score:500, pct:94.54, rank:1506910, w:39, l:10, lost:180, rem:1240, max:1740, r64:280, r32:220, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","Michigan St","Florida","Illinois","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Illinois","Arizona","Michigan"], ffp:["Duke","Michigan"] },
-  { name:"duke #1", owner:"Brandon Bao", champ:"Duke", champSeed:1, score:490, pct:90.0, rank:0, w:36, l:12, lost:200, rem:1280, max:1770, r64:230, r32:260, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Nebraska","Houston","Arizona","Purdue","Alabama","Iowa State"],
-    e8p:["Duke","Houston","Purdue","Alabama"], ffp:["Duke","Purdue"] },
-  { name:"Quinn's Picks", owner:"Quinn Kiefer", champ:"Arizona", champSeed:1, score:480, pct:83.5, rank:0, w:36, l:13, lost:240, rem:1240, max:1720, r64:240, r32:240, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Arizona","Michigan"], ffp:["Duke","Arizona"] },
-  { name:"Kiel Main", owner:"Kiel Messinger", champ:"Michigan", champSeed:1, score:480, pct:83.5, rank:0, w:37, l:12, lost:220, rem:1240, max:1720, r64:260, r32:220, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["St John's","Houston","Purdue","Michigan"], ffp:["Houston","Michigan"] },
-  { name:"Maddie", owner:"Maddie Kuan", champ:"Michigan", champSeed:1, score:460, pct:66.8, rank:0, w:36, l:13, lost:240, rem:1240, max:1700, r64:260, r32:200, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Illinois","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Illinois","Purdue","Michigan"], ffp:["Duke","Michigan"] },
-  { name:"Ming Yin's Picks", owner:"Ming Yin Sit", champ:"Arizona", champSeed:1, score:460, pct:66.8, rank:0, w:35, l:15, lost:260, rem:1200, max:1660, r64:240, r32:220, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Houston","Arizona","Gonzaga","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Arizona","Michigan"], ffp:["Duke","Arizona"] },
-  { name:"Picks 2", owner:"Saathvik Pai", champ:"Iowa State", champSeed:2, score:460, pct:66.8, rank:0, w:36, l:14, lost:200, rem:1200, max:1660, r64:260, r32:200, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Illinois","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Illinois","Purdue","Iowa State"], ffp:["Duke","Iowa State"] },
-  { name:"kachang", owner:"Kara Chang", champ:"Arizona", champSeed:1, score:460, pct:66.8, rank:0, w:36, l:15, lost:260, rem:1120, max:1580, r64:260, r32:200, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Houston","Arizona","Gonzaga","Michigan","Tennessee"],
-    e8p:["Duke","Florida","Arizona","Michigan"], ffp:["Duke","Arizona"] },
-  { name:"soupycows", owner:"Sophie Liu", champ:"Duke", champSeed:1, score:450, pct:0, rank:0, w:34, l:15, lost:250, rem:1240, max:1690, r64:250, r32:200, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Arizona","Michigan"], ffp:["Duke","Arizona"] },
-  { name:"MithilC3's Picks", owner:"MithilC3", champ:"Duke", champSeed:1, score:450, pct:0, rank:0, w:36, l:15, lost:270, rem:1160, max:1610, r64:270, r32:180, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Houston","Arizona","Purdue","Michigan","Virginia"],
-    e8p:["Duke","Houston","Arizona","Michigan"], ffp:["Duke","Michigan"] },
-  { name:"Kiss my Assh", owner:"Kiss my Assh", champ:"Purdue", champSeed:2, score:430, pct:0, rank:0, w:34, l:16, lost:280, rem:1200, max:1630, r64:250, r32:180, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Purdue","Michigan"], ffp:["Duke","Purdue"] },
-  { name:"gg", owner:"gg", champ:"Arizona", champSeed:1, score:430, pct:0, rank:0, w:32, l:20, lost:310, rem:1080, max:1510, r64:260, r32:170, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","North Carolina","Arizona","Purdue","Texas Tech","Iowa State"],
-    e8p:["Duke","North Carolina","Arizona","Iowa State"], ffp:["Duke","Arizona"] },
-  { name:"HoustonLuvr", owner:"Christian Millar", champ:"Houston", champSeed:2, score:420, pct:0, rank:0, w:33, l:17, lost:300, rem:1200, max:1620, r64:240, r32:180, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Arizona","Iowa State"], ffp:["Houston","Arizona"] },
-  { name:"ball iq", owner:"ball iq", champ:"Houston", champSeed:2, score:420, pct:0, rank:0, w:33, l:18, lost:280, rem:1160, max:1580, r64:260, r32:160, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Houston","Arizona","BYU","Michigan","Iowa State"],
-    e8p:["Duke","Houston","Arizona","Michigan"], ffp:["Houston","Arizona"] },
-  { name:"e", owner:"NOUCLAHATER", champ:"Duke", champSeed:1, score:420, pct:0, rank:0, w:32, l:19, lost:300, rem:1120, max:1540, r64:220, r32:200, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Vanderbilt","Houston","Arizona","Purdue","Michigan","Iowa State"],
-    e8p:["Duke","Vanderbilt","Arizona","Michigan"], ffp:["Duke","Michigan"] },
-  { name:"charcharsuperstar", owner:"charcharsuperstar", champ:"Arizona", champSeed:1, score:410, pct:0, rank:0, w:32, l:17, lost:290, rem:1240, max:1650, r64:230, r32:180, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Nebraska","Houston","Arizona","Purdue","Michigan","Tennessee"],
-    e8p:["Duke","Nebraska","Arizona","Michigan"], ffp:["Duke","Arizona"] },
-  { name:"We up", owner:"We up", champ:"Duke", champSeed:1, score:410, pct:0, rank:0, w:32, l:21, lost:310, rem:1000, max:1410, r64:250, r32:160, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UConn","Florida","North Carolina","Arizona","Gonzaga","Michigan","Iowa State"],
-    e8p:["Duke","Florida","Gonzaga","Michigan"], ffp:["Duke","Michigan"] },
-  { name:"Moonshot", owner:"Moonshot", champ:"Michigan", champSeed:1, score:410, pct:0, rank:0, w:30, l:24, lost:410, rem:840, max:1250, r64:220, r32:190, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","Michigan St","Vanderbilt","Houston","Arkansas","BYU","Michigan","Virginia"],
-    e8p:["Duke","Vanderbilt","BYU","Michigan"], ffp:["Vanderbilt","Michigan"] },
-  { name:"Doot Universary", owner:"Synthetique", champ:"Duke", champSeed:1, score:390, pct:0, rank:0, w:31, l:21, lost:350, rem:1120, max:1510, r64:230, r32:160, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Illinois","Arizona","BYU","Akron","Iowa State"],
-    e8p:["Duke","Illinois","Arizona","Iowa State"], ffp:["Duke","Arizona"] },
-  { name:"Realistic", owner:"Realistic", champ:"Duke", champSeed:1, score:360, pct:0, rank:0, w:29, l:23, lost:360, rem:1080, max:1440, r64:210, r32:150, s16:0, e8:0, ff:0, ch:0,
-    s16p:["Duke","UCLA","Florida","Penn","Arizona","Purdue","Michigan","Tennessee"],
-    e8p:["Duke","Florida","Purdue","Michigan"], ffp:["Duke","Purdue"] },
+// ============================================================
+const B = [
+  {n:"armpicks",o:"Armaan Bassi",ch:"Michigan",cs:1,s:510,p:97.0,w:39,l:11,rem:1200,mx:1710,r64:270,r32:240,
+   s16:["Duke","Louisville","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Houston","Purdue","Michigan"],ff:["Duke","Michigan"]},
+  {n:"Picks 1",o:"Saathvik Pai",ch:"Houston",cs:2,s:500,p:94.5,w:38,l:11,rem:1240,mx:1740,r64:260,r32:240,
+   s16:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Houston","Arizona","Iowa State"],ff:["Houston","Iowa State"]},
+  {n:"iLoveUCLA2",o:"Christian Millar",ch:"Michigan",cs:1,s:500,p:94.5,w:39,l:10,rem:1240,mx:1740,r64:280,r32:220,
+   s16:["Duke","Michigan St","Florida","Illinois","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Illinois","Arizona","Michigan"],ff:["Duke","Michigan"]},
+  {n:"duke #1",o:"Brandon Bao",ch:"Duke",cs:1,s:490,p:90.0,w:36,l:12,rem:1280,mx:1770,r64:230,r32:260,
+   s16:["Duke","UConn","Nebraska","Houston","Arizona","Purdue","Alabama","Iowa State"],
+   e8:["Duke","Houston","Purdue","Alabama"],ff:["Duke","Purdue"]},
+  {n:"Quinn's Picks",o:"Quinn Kiefer",ch:"Arizona",cs:1,s:480,p:83.5,w:36,l:13,rem:1240,mx:1720,r64:240,r32:240,
+   s16:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Houston","Arizona","Michigan"],ff:["Duke","Arizona"]},
+  {n:"Kiel Main",o:"Kiel Messinger",ch:"Michigan",cs:1,s:480,p:83.5,w:37,l:12,rem:1240,mx:1720,r64:260,r32:220,
+   s16:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["St John's","Houston","Purdue","Michigan"],ff:["Houston","Michigan"]},
+  {n:"Maddie",o:"Maddie Kuan",ch:"Michigan",cs:1,s:460,p:66.8,w:36,l:13,rem:1240,mx:1700,r64:260,r32:200,
+   s16:["Duke","UConn","Florida","Illinois","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Illinois","Purdue","Michigan"],ff:["Duke","Michigan"]},
+  {n:"Ming Yin's Picks",o:"Ming Yin Sit",ch:"Arizona",cs:1,s:460,p:66.8,w:35,l:15,rem:1200,mx:1660,r64:240,r32:220,
+   s16:["Duke","UConn","Florida","Houston","Arizona","Gonzaga","Michigan","Iowa State"],
+   e8:["Duke","Houston","Arizona","Michigan"],ff:["Duke","Arizona"]},
+  {n:"Picks 2",o:"Saathvik Pai",ch:"Iowa State",cs:2,s:460,p:66.8,w:36,l:14,rem:1200,mx:1660,r64:260,r32:200,
+   s16:["Duke","UCLA","Florida","Illinois","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Illinois","Purdue","Iowa State"],ff:["Duke","Iowa State"]},
+  {n:"kachang",o:"Kara Chang",ch:"Arizona",cs:1,s:460,p:66.8,w:36,l:15,rem:1120,mx:1580,r64:260,r32:200,
+   s16:["Duke","UConn","Florida","Houston","Arizona","Gonzaga","Michigan","Tennessee"],
+   e8:["Duke","Florida","Arizona","Michigan"],ff:["Duke","Arizona"]},
+  {n:"soupycows",o:"Sophie Liu",ch:"Duke",cs:1,s:450,p:57,w:34,l:15,rem:1240,mx:1690,r64:250,r32:200,
+   s16:["Duke","UConn","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Houston","Arizona","Michigan"],ff:["Duke","Arizona"]},
+  {n:"MithilC3's Picks",o:"MithilC3",ch:"Duke",cs:1,s:450,p:57,w:36,l:15,rem:1160,mx:1610,r64:270,r32:180,
+   s16:["Duke","UCLA","Florida","Houston","Arizona","Purdue","Michigan","Virginia"],
+   e8:["Duke","Houston","Arizona","Michigan"],ff:["Duke","Michigan"]},
+  {n:"Kiss my Assh",o:"Kiss my Assh",ch:"Purdue",cs:2,s:430,p:42,w:34,l:16,rem:1200,mx:1630,r64:250,r32:180,
+   s16:["Duke","UCLA","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Houston","Purdue","Michigan"],ff:["Duke","Purdue"]},
+  {n:"gg",o:"gg",ch:"Arizona",cs:1,s:430,p:42,w:32,l:20,rem:1080,mx:1510,r64:260,r32:170,
+   s16:["Duke","UConn","Florida","North Carolina","Arizona","Purdue","Texas Tech","Iowa State"],
+   e8:["Duke","North Carolina","Arizona","Iowa State"],ff:["Duke","Arizona"]},
+  {n:"HoustonLuvr",o:"Christian Millar",ch:"Houston",cs:2,s:420,p:35,w:33,l:17,rem:1200,mx:1620,r64:240,r32:180,
+   s16:["Duke","UCLA","Florida","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Houston","Arizona","Iowa State"],ff:["Houston","Arizona"]},
+  {n:"ball iq",o:"ball iq",ch:"Houston",cs:2,s:420,p:35,w:33,l:18,rem:1160,mx:1580,r64:260,r32:160,
+   s16:["Duke","UCLA","Florida","Houston","Arizona","BYU","Michigan","Iowa State"],
+   e8:["Duke","Houston","Arizona","Michigan"],ff:["Houston","Arizona"]},
+  {n:"e",o:"NOUCLAHATER",ch:"Duke",cs:1,s:420,p:35,w:32,l:19,rem:1120,mx:1540,r64:220,r32:200,
+   s16:["Duke","UCLA","Vanderbilt","Houston","Arizona","Purdue","Michigan","Iowa State"],
+   e8:["Duke","Vanderbilt","Arizona","Michigan"],ff:["Duke","Michigan"]},
+  {n:"charcharsuperstar",o:"charcharsuperstar",ch:"Arizona",cs:1,s:410,p:28,w:32,l:17,rem:1240,mx:1650,r64:230,r32:180,
+   s16:["Duke","UCLA","Nebraska","Houston","Arizona","Purdue","Michigan","Tennessee"],
+   e8:["Duke","Nebraska","Arizona","Michigan"],ff:["Duke","Arizona"]},
+  {n:"We up",o:"We up",ch:"Duke",cs:1,s:410,p:28,w:32,l:21,rem:1000,mx:1410,r64:250,r32:160,
+   s16:["Duke","UConn","Florida","North Carolina","Arizona","Gonzaga","Michigan","Iowa State"],
+   e8:["Duke","Florida","Gonzaga","Michigan"],ff:["Duke","Michigan"]},
+  {n:"Moonshot",o:"Moonshot",ch:"Michigan",cs:1,s:410,p:28,w:30,l:24,rem:840,mx:1250,r64:220,r32:190,
+   s16:["Duke","Michigan St","Vanderbilt","Houston","Arkansas","BYU","Michigan","Virginia"],
+   e8:["Duke","Vanderbilt","BYU","Michigan"],ff:["Vanderbilt","Michigan"]},
+  {n:"Doot Universary",o:"Synthetique",ch:"Duke",cs:1,s:390,p:17,w:31,l:21,rem:1120,mx:1510,r64:230,r32:160,
+   s16:["Duke","UCLA","Florida","Illinois","Arizona","BYU","Akron","Iowa State"],
+   e8:["Duke","Illinois","Arizona","Iowa State"],ff:["Duke","Arizona"]},
+  {n:"Realistic",o:"Realistic",ch:"Duke",cs:1,s:360,p:7,w:29,l:23,rem:1080,mx:1440,r64:210,r32:150,
+   s16:["Duke","UCLA","Florida","Penn","Arizona","Purdue","Michigan","Tennessee"],
+   e8:["Duke","Florida","Purdue","Michigan"],ff:["Duke","Purdue"]},
 ];
 
-// Map S16 slots: index 0-7 maps to actual matchups
-const s16Matchups = [
-  { region: "East", t1: "Duke", t1Seed: 1, t2: "St. John's", t2Seed: 5, prob1: 73, prob2: 27, status: "pending" },
-  { region: "East", t1: "UConn", t1Seed: 2, t2: "Michigan St", t2Seed: 3, prob1: 55, prob2: 45, status: "pending" },
-  { region: "South", t1: "Iowa", t1Seed: 9, t2: "Nebraska", t2Seed: 4, prob1: 47, prob2: 53, status: "resolved", winner: "Iowa" },
-  { region: "South", t1: "Houston", t1Seed: 2, t2: "Illinois", t2Seed: 3, prob1: 58, prob2: 42, status: "pending" },
-  { region: "West", t1: "Arizona", t1Seed: 1, t2: "Arkansas", t2Seed: 4, prob1: 80, prob2: 20, status: "pending" },
-  { region: "West", t1: "Purdue", t1Seed: 2, t2: "Texas", t2Seed: 11, prob1: 74, prob2: 26, status: "pending" },
-  { region: "Midwest", t1: "Michigan", t1Seed: 1, t2: "Alabama", t2Seed: 4, prob1: 80, prob2: 20, status: "pending" },
-  { region: "Midwest", t1: "Iowa State", t1Seed: 2, t2: "Tennessee", t2Seed: 6, prob1: 65, prob2: 35, status: "pending" },
+// S16 actual matchups: [t1, seed1, t2, seed2, prob1%, status, winner?]
+const S16 = [
+  ["Duke",1,"St. John's",5,73,"pending"],
+  ["UConn",2,"Michigan St",3,55,"pending"],
+  ["Iowa",9,"Nebraska",4,47,"resolved","Iowa"],
+  ["Houston",2,"Illinois",3,58,"pending"],
+  ["Arizona",1,"Arkansas",4,80,"pending"],
+  ["Purdue",2,"Texas",11,74,"pending"],
+  ["Michigan",1,"Alabama",4,80,"pending"],
+  ["Iowa State",2,"Tennessee",6,65,"pending"],
 ];
+const S16_REGIONS = ["East","East","South","South","West","West","Midwest","Midwest"];
 
-// E8 matchup labels
-const e8Labels = ["East Final", "South Final", "West Final", "Midwest Final"];
+const E8_LABELS = ["East Final","South Final","West Final","Midwest Final"];
+const FF_LABELS = ["Semifinal: East vs South","Semifinal: West vs Midwest"];
 
-// Championship market odds
-const marketOdds = {
-  "Duke":       { poly: 18.0, kalshi: 20.0, book: "+420" },
-  "Michigan":   { poly: 21.0, kalshi: 18.0, book: "+300" },
-  "Arizona":    { poly: 21.5, kalshi: 18.5, book: "+330" },
-  "Houston":    { poly: 11.0, kalshi: 7.0,  book: "+750" },
-  "Iowa State": { poly: 5.3,  kalshi: 4.5,  book: "+1700" },
-  "Purdue":     { poly: 5.6,  kalshi: 5.0,  book: "+1500" },
+const alive = new Set(["Duke","St. John's","UConn","Michigan St","Iowa","Nebraska","Houston","Illinois","Arizona","Arkansas","Purdue","Texas","Michigan","Alabama","Iowa State","Tennessee"]);
+
+// Win probability by team at each stage
+const P_S16 = {"Duke":.73,"St. John's":.27,"UConn":.55,"Michigan St":.45,"Houston":.58,"Illinois":.42,
+  "Arizona":.80,"Arkansas":.20,"Purdue":.74,"Texas":.26,"Michigan":.80,"Alabama":.20,"Iowa State":.65,"Tennessee":.35};
+const P_E8 = {"Duke":.52,"St. John's":.16,"Michigan St":.16,"UConn":.16,"Houston":.41,"Illinois":.28,
+  "Nebraska":.20,"Iowa":.11,"Arizona":.58,"Purdue":.30,"Arkansas":.09,"Texas":.04,"Michigan":.56,"Iowa State":.27,"Tennessee":.12,"Alabama":.06};
+const P_FF = {"Duke":.33,"Houston":.20,"Illinois":.10,"Michigan":.35,"Arizona":.32,"Purdue":.12,
+  "Iowa State":.10,"UConn":.05,"Michigan St":.05,"St. John's":.05,"Arkansas":.03,"Tennessee":.02,"Nebraska":.02,"Iowa":.01,"Alabama":.01,"Texas":.005};
+const P_CH = {"Duke":.18,"Michigan":.21,"Arizona":.215,"Houston":.11,"Purdue":.056,"Illinois":.061,
+  "Iowa State":.053,"UConn":.033,"Michigan St":.028,"St. John's":.026,"Arkansas":.021,"Tennessee":.015,"Nebraska":.013,"Iowa":.01,"Alabama":.01,"Texas":.005};
+
+const MKT = {
+  "Duke":{poly:18.0,kalshi:20.0,book:"+420"},
+  "Michigan":{poly:21.0,kalshi:18.0,book:"+300"},
+  "Arizona":{poly:21.5,kalshi:18.5,book:"+330"},
+  "Houston":{poly:11.0,kalshi:7.0,book:"+750"},
+  "Iowa State":{poly:5.3,kalshi:4.5,book:"+1700"},
+  "Purdue":{poly:5.6,kalshi:5.0,book:"+1500"},
 };
 
-// Actual alive teams for validation
-const aliveTeams = new Set(["Duke","St. John's","UConn","Michigan St","Iowa","Nebraska","Houston","Illinois","Arizona","Arkansas","Purdue","Texas","Michigan","Alabama","Iowa State","Tennessee"]);
+function champBg(t){return{"Duke":"rgba(0,48,135,.18)","Michigan":"rgba(255,203,5,.10)","Arizona":"rgba(204,0,51,.12)",
+  "Houston":"rgba(200,16,46,.12)","Iowa State":"rgba(200,16,46,.12)","Purdue":"rgba(206,184,136,.10)"}[t]||"var(--bg-3)";}
+function champFg(t){return{"Duke":"#93b4f7","Michigan":"#fcd34d","Arizona":"#fb7185",
+  "Houston":"#fb7185","Iowa State":"#fb7185","Purdue":"#e2d5b8"}[t]||"var(--text-2)";}
 
-// ====================================================================
-// HELPERS
-// ====================================================================
-
-function isAlive(pick) {
-  return aliveTeams.has(pick);
+// ============================================================
+// PROJECTED POINTS
+// ============================================================
+function calcProj(b) {
+  let exp = b.s;
+  // S16: 40pts each, 8 slots
+  b.s16.forEach((pick,i) => {
+    if(S16[i][5]==="resolved") return; // already scored
+    const p = P_S16[pick] || 0;
+    exp += 40 * p;
+  });
+  // E8: 80pts each, 4 slots
+  b.e8.forEach(pick => {
+    const p = alive.has(pick) ? (P_E8[pick]||0) : 0;
+    exp += 80 * p;
+  });
+  // FF: 160pts each, 2 slots
+  b.ff.forEach(pick => {
+    const p = alive.has(pick) ? (P_FF[pick]||0) : 0;
+    exp += 160 * p;
+  });
+  // Championship: 320pts
+  const cp = alive.has(b.ch) ? (P_CH[b.ch]||0) : 0;
+  exp += 320 * cp;
+  return Math.round(exp);
 }
 
-function champColor(team) {
-  const colors = {
-    "Duke": "#003087", "Michigan": "#00274C", "Arizona": "#CC0033",
-    "Houston": "#C8102E", "Iowa State": "#C8102E", "Purdue": "#CEB888",
-  };
-  return colors[team] || "#555";
-}
-
-function champBg(team) {
-  const colors = {
-    "Duke": "rgba(0,48,135,0.2)", "Michigan": "rgba(0,39,76,0.25)",
-    "Arizona": "rgba(204,0,51,0.15)", "Houston": "rgba(200,16,46,0.15)",
-    "Iowa State": "rgba(200,16,46,0.15)", "Purdue": "rgba(200,184,136,0.15)",
-  };
-  return colors[team] || "var(--bg-3)";
-}
-
-// ====================================================================
-// RENDER
-// ====================================================================
-
-function renderStatsBar() {
-  const el = document.getElementById('stats-bar');
-  const avgScore = Math.round(brackets.reduce((s,b) => s+b.score, 0) / brackets.length);
-  const topScore = brackets[0].score;
-  const avgWin = (brackets.reduce((s,b) => s+b.w, 0) / brackets.length).toFixed(1);
-  const champCounts = {};
-  brackets.forEach(b => { champCounts[b.champ] = (champCounts[b.champ]||0)+1; });
-  const topChamp = Object.entries(champCounts).sort((a,b) => b[1]-a[1])[0];
-
-  el.innerHTML = `
-    <div class="stat-item"><div class="stat-value">${brackets.length}</div><div class="stat-label">Brackets</div></div>
-    <div class="stat-item"><div class="stat-value">${topScore}</div><div class="stat-label">Leader Score</div></div>
-    <div class="stat-item"><div class="stat-value">${avgScore}</div><div class="stat-label">Avg Score</div></div>
-    <div class="stat-item"><div class="stat-value">${avgWin}</div><div class="stat-label">Avg Wins</div></div>
-    <div class="stat-item"><div class="stat-value">${topChamp[0]}</div><div class="stat-label">Most Popular Champ (${topChamp[1]})</div></div>
-    <div class="stat-item"><div class="stat-value">1,920</div><div class="stat-label">Max Possible</div></div>
-  `;
-}
-
-function renderLeaderboard() {
+// ============================================================
+// RENDER: LEADERBOARD
+// ============================================================
+function renderLB() {
   const body = document.getElementById('lb-body');
-  let rank = 0, prevScore = -1, skipCount = 0;
-
-  brackets.forEach((b, i) => {
-    if (b.score !== prevScore) { rank = i + 1; prevScore = b.score; }
-    const isLeader = rank === 1;
-    const pctColor = b.pct >= 90 ? 'var(--green)' : b.pct >= 70 ? 'var(--text-1)' : 'var(--text-3)';
-    const maxBarW = ((b.max / 1920) * 100).toFixed(0);
-
-    body.innerHTML += `
-      <tr class="${isLeader ? 'leader' : ''}">
-        <td class="center"><span class="lb-rank ${isLeader ? 'gold' : ''}">${rank}</span></td>
-        <td>
-          <span class="lb-champ-badge" style="background:${champBg(b.champ)};color:${champColor(b.champ)};">
-            (${b.champSeed}) ${b.champ}
-          </span>
-        </td>
-        <td>
-          <div class="lb-name">${b.name}</div>
-          <div class="lb-owner">${b.owner}</div>
-        </td>
-        <td class="right"><span class="lb-pts">${b.score}</span></td>
-        <td class="right"><span class="lb-pct" style="color:${pctColor};">${b.pct > 0 ? b.pct.toFixed(1) : '&mdash;'}</span></td>
-        <td class="right">
-          <span class="lb-max">${b.max}</span>
-          <div class="mini-bar"><div class="mini-bar-fill" style="width:${maxBarW}%;background:var(--text-3);"></div></div>
-        </td>
-        <td class="right">
-          <span class="lb-record"><span class="w">${b.w}W</span>-<span class="l">${b.l}L</span></span>
-        </td>
-        <td class="right"><span class="lb-round-pts">${b.r64}</span></td>
-        <td class="right"><span class="lb-round-pts">${b.r32}</span></td>
-        <td class="right"><span class="lb-round-pts">${b.s16 || '&mdash;'}</span></td>
-      </tr>
-    `;
+  let rank=0, prev=-1;
+  B.forEach((b,i) => {
+    if(b.s!==prev){rank=i+1;prev=b.s;}
+    const proj = calcProj(b);
+    const top = rank===1;
+    const pctC = b.p>=90?'var(--emerald)':b.p>=70?'var(--text-1)':b.p>=50?'var(--text-2)':'var(--text-3)';
+    const projC = proj>=780?'var(--emerald)':proj>=700?'var(--sky)':'var(--text-2)';
+    body.innerHTML += `<tr class="${top?'top':''}">
+      <td class="c"><span class="rk ${top?'g':''}">${rank}</span></td>
+      <td><span class="ch-badge" style="background:${champBg(b.ch)};color:${champFg(b.ch)};">(${b.cs}) ${b.ch}</span></td>
+      <td><div class="nm">${b.n}</div><div class="ow">${b.o}</div></td>
+      <td class="r"><span class="pts">${b.s}</span></td>
+      <td class="r"><span class="pct" style="color:${pctC};">${b.p.toFixed(1)}</span></td>
+      <td class="r"><span class="proj" style="color:${projC};">${proj}</span></td>
+      <td class="r"><span class="mx">${b.mx}</span>
+        <div class="mbar"><div class="mbar-f" style="width:${(b.mx/1920*100).toFixed(0)}%;background:var(--text-4);"></div></div></td>
+      <td class="r"><span class="rec"><span class="w">${b.w}W</span>-<span class="l">${b.l}L</span></span></td>
+      <td class="r"><span class="rpts">${b.r64}</span></td>
+      <td class="r"><span class="rpts">${b.r32}</span></td>
+    </tr>`;
   });
 }
 
-function renderChampGrid() {
+// ============================================================
+// RENDER: CHAMPIONSHIP GRID
+// ============================================================
+function renderChamp() {
   const grid = document.getElementById('champ-grid');
-  const champCounts = {};
-  brackets.forEach(b => { champCounts[b.champ] = (champCounts[b.champ]||0)+1; });
-  const sorted = Object.entries(champCounts).sort((a,b) => b[1]-a[1]);
-  const total = brackets.length;
-  const maxCount = sorted[0][1];
+  const counts = {};
+  B.forEach(b=>{counts[b.ch]=(counts[b.ch]||0)+1;});
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const total=B.length, maxC=sorted[0][1];
 
-  sorted.forEach(([team, count]) => {
-    const pct = ((count/total)*100).toFixed(0);
-    const odds = marketOdds[team];
-    const polyPct = odds ? odds.poly : 0;
-    const kalshiPct = odds ? odds.kalshi : 0;
-
-    grid.innerHTML += `
-      <div class="champ-card">
-        <div class="team-row">
-          <span class="team-name">${team}</span>
-          <span class="team-seed">${count}/${total}</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Pool</span>
-          <div class="champ-bar"><div class="champ-bar-fill" style="width:${(count/maxCount)*100}%;background:var(--green);"></div></div>
-          <span class="bar-pct" style="color:var(--green);">${pct}%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Poly</span>
-          <div class="champ-bar"><div class="champ-bar-fill" style="width:${(polyPct/25)*100}%;background:var(--purple);"></div></div>
-          <span class="bar-pct" style="color:var(--purple);">${polyPct}%</span>
-        </div>
-        <div class="bar-row">
-          <span class="bar-label">Kalshi</span>
-          <div class="champ-bar"><div class="champ-bar-fill" style="width:${(kalshiPct/25)*100}%;background:var(--cyan);"></div></div>
-          <span class="bar-pct" style="color:var(--cyan);">${kalshiPct}%</span>
-        </div>
-        ${odds ? `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-4);margin-top:2px;">Sportsbook: ${odds.book}</div>` : ''}
-      </div>
-    `;
+  sorted.forEach(([team,count])=>{
+    const pct=((count/total)*100).toFixed(0);
+    const m=MKT[team];
+    const pp=m?m.poly:0, kp=m?m.kalshi:0;
+    grid.innerHTML+=`<div class="cc">
+      <div class="tr"><span class="tn">${team}</span><span class="ts">${count}/${total}</span></div>
+      <div class="br"><span class="bl">Pool</span><div class="cb"><div class="cb-f" style="width:${(count/maxC)*100}%;background:var(--emerald);"></div></div><span class="bp" style="color:var(--emerald);">${pct}%</span></div>
+      <div class="br"><span class="bl">Poly</span><div class="cb"><div class="cb-f" style="width:${(pp/25)*100}%;background:var(--violet);"></div></div><span class="bp" style="color:var(--violet);">${pp}%</span></div>
+      <div class="br"><span class="bl">Kalshi</span><div class="cb"><div class="cb-f" style="width:${(kp/25)*100}%;background:var(--sky);"></div></div><span class="bp" style="color:var(--sky);">${kp}%</span></div>
+      ${m?`<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-4);">Book: ${m.book}</div>`:''}
+    </div>`;
   });
 }
 
-function renderMatchupGrid() {
-  const grid = document.getElementById('matchup-grid');
+// ============================================================
+// RENDER: ALL MATCHUPS RANKED BY CONTROVERSY
+// ============================================================
+function buildGames() {
+  const games = [];
+  const total = B.length;
 
-  s16Matchups.forEach((m, mi) => {
-    // Count pool picks for each team in this matchup slot
-    const pickCounts = {};
-    let deadCount = 0;
-    brackets.forEach(b => {
-      const pick = b.s16p[mi];
-      if (!isAlive(pick)) {
-        deadCount++;
-        pickCounts[pick + ' (out)'] = (pickCounts[pick + ' (out)']||0)+1;
+  // S16 games (8 slots)
+  S16.forEach((m,mi) => {
+    const picks = {};
+    const deadPicks = {};
+    B.forEach(b => {
+      const pk = b.s16[mi];
+      if(alive.has(pk)){
+        if(!picks[pk]) picks[pk]={count:0,names:[]};
+        picks[pk].count++; picks[pk].names.push(b.n);
       } else {
-        pickCounts[pick] = (pickCounts[pick]||0)+1;
+        if(!deadPicks[pk]) deadPicks[pk]={count:0,names:[]};
+        deadPicks[pk].count++; deadPicks[pk].names.push(b.n);
       }
     });
-
-    const total = brackets.length;
-    const sorted = Object.entries(pickCounts).sort((a,b) => b[1]-a[1]);
-
-    // Split bar segments
-    const colors = ['var(--green)', 'var(--blue)', 'var(--orange)', 'var(--purple)', 'var(--red)', 'var(--text-4)'];
-    let splitBarHtml = '';
-    let splitHeaderHtml = '';
-    sorted.forEach(([team, count], si) => {
-      const w = ((count/total)*100).toFixed(1);
-      const isDead = team.includes('(out)');
-      const color = isDead ? 'var(--bg-4)' : colors[si % colors.length];
-      splitBarHtml += `<div class="split-segment" style="width:${w}%;background:${color};"></div>`;
-    });
-    splitHeaderHtml = sorted.map(([team, count], si) => {
-      const isDead = team.includes('(out)');
-      const color = isDead ? 'var(--text-4)' : colors[si % colors.length];
-      return `<span style="color:${color}">${team} ${Math.round(count/total*100)}%</span>`;
-    }).join('');
-
-    const isResolved = m.status === 'resolved';
-    const statusHtml = isResolved
-      ? `<span class="status-resolved" style="background:var(--green-dim);color:var(--green);">Final: ${m.winner}</span>`
-      : '';
-
-    grid.innerHTML += `
-      <div class="card matchup-card ${isResolved ? 'resolved' : ''}">
-        ${statusHtml}
-        <div class="matchup-region">${m.region} Region</div>
-        <div class="matchup-vs">
-          <div class="matchup-team left">
-            <div class="t-seed">(${m.t1Seed})</div>
-            <div class="t-name">${m.t1}</div>
-            <div class="t-prob" style="color:var(--green);">${m.prob1}%</div>
-          </div>
-          <div class="matchup-team right">
-            <div class="t-seed">(${m.t2Seed})</div>
-            <div class="t-name">${m.t2}</div>
-            <div class="t-prob" style="color:var(--red);">${m.prob2}%</div>
-          </div>
-        </div>
-        <div class="split-bar-container">
-          <div class="split-bar-header">${splitHeaderHtml}</div>
-          <div class="split-bar">${splitBarHtml}</div>
-        </div>
-        <div class="market-bar-row">
-          <span class="market-tag" style="background:var(--purple-dim);color:var(--purple);">Market</span>
-          <div class="market-bar"><div class="market-bar-fill" style="width:${m.prob1}%;background:var(--green);"></div></div>
-          <span class="market-pct" style="color:var(--green);">${m.prob1}%</span>
-        </div>
-      </div>
-    `;
-  });
-}
-
-function renderFlowGrid() {
-  const grid = document.getElementById('flow-grid');
-
-  // E8 picks
-  const e8Counts = [{},{},{},{}];
-  brackets.forEach(b => {
-    b.e8p.forEach((pick, i) => {
-      const alive = isAlive(pick);
-      const key = alive ? pick : pick + ' (out)';
-      e8Counts[i][key] = (e8Counts[i][key]||0)+1;
+    const topCount = Math.max(...Object.values(picks).map(v=>v.count),0);
+    const controversy = topCount>0 ? Math.round((1 - topCount/total)*100) : 0;
+    games.push({
+      type:'s16', round:'Sweet 16', region:S16_REGIONS[mi], pts:40,
+      t1:m[0], s1:m[1], t2:m[2], s2:m[3], prob1:m[4], prob2:100-m[4],
+      status:m[5], winner:m[6],
+      picks, deadPicks, controversy
     });
   });
 
-  // FF picks
-  const ffCounts = [{},{}];
-  brackets.forEach(b => {
-    b.ffp.forEach((pick, i) => {
-      const alive = isAlive(pick);
-      const key = alive ? pick : pick + ' (out)';
-      ffCounts[i][key] = (ffCounts[i][key]||0)+1;
+  // E8 games (4 slots)
+  E8_LABELS.forEach((label,i) => {
+    const picks = {};
+    const deadPicks = {};
+    B.forEach(b => {
+      const pk = b.e8[i];
+      if(alive.has(pk)){
+        if(!picks[pk]) picks[pk]={count:0,names:[]};
+        picks[pk].count++; picks[pk].names.push(b.n);
+      } else {
+        if(!deadPicks[pk]) deadPicks[pk]={count:0,names:[]};
+        deadPicks[pk].count++; deadPicks[pk].names.push(b.n);
+      }
+    });
+    const topCount = Math.max(...Object.values(picks).map(v=>v.count),0);
+    const controversy = topCount>0 ? Math.round((1 - topCount/total)*100) : 0;
+    // Get top two alive picks for display
+    const sorted = Object.entries(picks).sort((a,b)=>b[1].count-a[1].count);
+    const t1=sorted[0]?sorted[0][0]:'TBD', t2=sorted[1]?sorted[1][0]:'TBD';
+    const p1=P_E8[t1]||0, p2=P_E8[t2]||0;
+    games.push({
+      type:'e8', round:'Elite 8', region:label, pts:80,
+      t1, s1:'', t2, s2:'', prob1:Math.round(p1*100/(p1+p2||1)), prob2:Math.round(p2*100/(p1+p2||1)),
+      status:'pending',
+      picks, deadPicks, controversy
     });
   });
 
-  // Champ picks
-  const champCounts = {};
-  brackets.forEach(b => {
-    champCounts[b.champ] = (champCounts[b.champ]||0)+1;
-  });
-
-  function renderFlowPicks(counts, label) {
-    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
-    const total = brackets.length;
-    return sorted.map(([team, count]) => {
-      const isDead = team.includes('(out)');
-      const bg = isDead ? 'var(--bg-4)' : 'var(--green-dim)';
-      const color = isDead ? 'var(--text-4)' : 'var(--green)';
-      return `<span class="flow-pick" style="background:${bg};color:${color};">${team}<span class="count">${count}</span></span>`;
-    }).join('');
-  }
-
-  // E8 column
-  let e8Html = `<div class="flow-column-header">Elite 8</div>`;
-  e8Labels.forEach((label, i) => {
-    e8Html += `
-      <div class="flow-item">
-        <div class="flow-item-label">${label}</div>
-        <div class="flow-picks">${renderFlowPicks(e8Counts[i])}</div>
-      </div>
-    `;
-  });
-
-  // FF column
-  let ffHtml = `<div class="flow-column-header">Final Four</div>`;
-  const ffLabels = ["East/South SF", "West/Midwest SF"];
-  ffLabels.forEach((label, i) => {
-    ffHtml += `
-      <div class="flow-item">
-        <div class="flow-item-label">${label}</div>
-        <div class="flow-picks">${renderFlowPicks(ffCounts[i])}</div>
-      </div>
-    `;
-  });
-
-  // Championship column
-  let champHtml = `<div class="flow-column-header">Championship</div>`;
-  champHtml += `
-    <div class="flow-item">
-      <div class="flow-item-label">National Champion</div>
-      <div class="flow-picks">${renderFlowPicks(champCounts)}</div>
-    </div>
-  `;
-
-  // Market column
-  let marketHtml = `<div class="flow-column-header">Market Odds</div>`;
-  const marketSorted = Object.entries(marketOdds).sort((a,b) => b[1].poly - a[1].poly);
-  let marketPicksHtml = marketSorted.map(([team, odds]) => {
-    return `
-      <div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--text-1);min-width:80px;">${team}</span>
-        <div style="flex:1;height:6px;border-radius:3px;background:var(--bg-3);overflow:hidden;">
-          <div style="height:100%;border-radius:3px;background:var(--purple);width:${(odds.poly/25)*100}%;"></div>
-        </div>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--purple);min-width:36px;text-align:right;">${odds.poly}%</span>
-      </div>
-    `;
-  }).join('');
-  marketHtml += `
-    <div class="flow-item">
-      <div class="flow-item-label">Polymarket Win %</div>
-      ${marketPicksHtml}
-    </div>
-  `;
-
-  grid.innerHTML = `
-    <div class="flow-column">${e8Html}</div>
-    <div class="flow-column">${ffHtml}</div>
-    <div class="flow-column">${champHtml}</div>
-    <div class="flow-column">${marketHtml}</div>
-  `;
-}
-
-function renderControversies() {
-  const list = document.getElementById('controversy-list');
-  const total = brackets.length;
-
-  // Build controversy data from actual pick distributions
-  const controversies = [];
-
-  // S16 controversies
-  s16Matchups.forEach((m, mi) => {
-    if (m.status === 'resolved') return;
-    const counts = {};
-    brackets.forEach(b => {
-      const pick = b.s16p[mi];
-      if (isAlive(pick)) counts[pick] = (counts[pick]||0)+1;
+  // FF games (2 slots)
+  FF_LABELS.forEach((label,i) => {
+    const picks = {};
+    const deadPicks = {};
+    B.forEach(b => {
+      const pk = b.ff[i];
+      if(alive.has(pk)){
+        if(!picks[pk]) picks[pk]={count:0,names:[]};
+        picks[pk].count++; picks[pk].names.push(b.n);
+      } else {
+        if(!deadPicks[pk]) deadPicks[pk]={count:0,names:[]};
+        deadPicks[pk].count++; deadPicks[pk].names.push(b.n);
+      }
     });
-    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
-    if (sorted.length < 2) return;
-    const top = sorted[0][1];
-    const second = sorted[1][1];
-    // Controversy = how close the split is (normalized)
-    const score = Math.round((1 - (top - second) / total) * 100);
-    if (score < 50) return;
-    controversies.push({
-      name: `${m.t1} vs ${m.t2}`,
-      round: "Sweet 16", region: m.region, pts: 40,
-      distribution: sorted, total,
-      marketFav: m.prob1 >= m.prob2 ? m.t1 : m.t2,
-      marketProb: Math.max(m.prob1, m.prob2),
-      score
-    });
-  });
-
-  // E8 controversies
-  e8Labels.forEach((label, i) => {
-    const counts = {};
-    brackets.forEach(b => {
-      const pick = b.e8p[i];
-      if (isAlive(pick)) counts[pick] = (counts[pick]||0)+1;
-    });
-    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
-    if (sorted.length < 2) return;
-    const top = sorted[0][1];
-    const second = sorted[1][1];
-    const score = Math.round((1 - (top - second) / total) * 100);
-    controversies.push({
-      name: label,
-      round: "Elite 8", region: "", pts: 80,
-      distribution: sorted, total,
-      marketFav: sorted[0][0], marketProb: 0,
-      score
-    });
-  });
-
-  // FF controversies
-  const ffLabels = ["Semifinal: East/South", "Semifinal: West/Midwest"];
-  ffLabels.forEach((label, i) => {
-    const counts = {};
-    brackets.forEach(b => {
-      const pick = b.ffp[i];
-      if (isAlive(pick)) counts[pick] = (counts[pick]||0)+1;
-    });
-    const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
-    if (sorted.length < 2) return;
-    const top = sorted[0][1];
-    const second = sorted[1][1];
-    const score = Math.round((1 - (top - second) / total) * 100);
-    controversies.push({
-      name: label,
-      round: "Final Four", region: "", pts: 160,
-      distribution: sorted, total,
-      marketFav: sorted[0][0], marketProb: 0,
-      score
+    const topCount = Math.max(...Object.values(picks).map(v=>v.count),0);
+    const controversy = topCount>0 ? Math.round((1 - topCount/total)*100) : 0;
+    const sorted = Object.entries(picks).sort((a,b)=>b[1].count-a[1].count);
+    const t1=sorted[0]?sorted[0][0]:'TBD', t2=sorted[1]?sorted[1][0]:'TBD';
+    const p1=P_FF[t1]||0, p2=P_FF[t2]||0;
+    games.push({
+      type:'ff', round:'Final Four', region:label, pts:160,
+      t1, s1:'', t2, s2:'', prob1:Math.round(p1*100/(p1+p2||1)), prob2:Math.round(p2*100/(p1+p2||1)),
+      status:'pending',
+      picks, deadPicks, controversy
     });
   });
 
   // Championship
-  const champCounts = {};
-  brackets.forEach(b => { champCounts[b.champ] = (champCounts[b.champ]||0)+1; });
-  const champSorted = Object.entries(champCounts).sort((a,b) => b[1]-a[1]);
-  if (champSorted.length >= 2) {
-    const top = champSorted[0][1], second = champSorted[1][1];
-    const score = Math.round((1 - (top - second) / total) * 100);
-    controversies.push({
-      name: "National Championship",
-      round: "Championship", region: "", pts: 320,
-      distribution: champSorted, total,
-      marketFav: "Arizona", marketProb: 21.5,
-      score
+  {
+    const picks = {};
+    B.forEach(b => {
+      const pk = b.ch;
+      if(!picks[pk]) picks[pk]={count:0,names:[]};
+      picks[pk].count++; picks[pk].names.push(b.n);
+    });
+    const topCount = Math.max(...Object.values(picks).map(v=>v.count));
+    const controversy = Math.round((1 - topCount/total)*100);
+    const sorted = Object.entries(picks).sort((a,b)=>b[1].count-a[1].count);
+    const t1=sorted[0][0], t2=sorted[1][0];
+    const p1=P_CH[t1]||0, p2=P_CH[t2]||0;
+    games.push({
+      type:'ch', round:'Championship', region:'National Champion', pts:320,
+      t1, s1:'', t2, s2:'', prob1:Math.round(p1*100/(p1+p2||1)), prob2:Math.round(p2*100/(p1+p2||1)),
+      status:'pending',
+      picks, deadPicks:{}, controversy
     });
   }
 
-  // Sort by: controversy score weighted by round points
-  controversies.sort((a, b) => (b.score * b.pts) - (a.score * a.pts));
+  // Sort by weighted controversy (controversy × pts multiplier)
+  games.sort((a,b) => (b.controversy * b.pts) - (a.controversy * a.pts));
+  return games;
+}
 
-  const barColors = ['var(--green)', 'var(--blue)', 'var(--orange)', 'var(--purple)', 'var(--cyan)', 'var(--text-4)'];
+function renderMatchups() {
+  const list = document.getElementById('mc-list');
+  const games = buildGames();
+  const total = B.length;
 
-  controversies.forEach(c => {
-    const scoreColor = c.score >= 80 ? 'var(--red)' : c.score >= 60 ? 'var(--orange)' : 'var(--gold)';
-    const scoreBg = c.score >= 80 ? 'var(--red-dim)' : c.score >= 60 ? 'var(--orange-dim)' : 'var(--gold-dim)';
+  games.forEach(g => {
+    const isResolved = g.status === 'resolved';
+    const sorted = Object.entries(g.picks).sort((a,b)=>b[1].count-a[1].count);
+    const deadSorted = Object.entries(g.deadPicks).sort((a,b)=>b[1].count-a[1].count);
 
-    let barsHtml = c.distribution.map(([team, count], i) => {
-      const pct = ((count/c.total)*100).toFixed(0);
-      const color = barColors[i % barColors.length];
-      return `
-        <div class="controversy-bar-row">
-          <span class="controversy-bar-label">${team}</span>
-          <div class="controversy-bar">
-            <div class="controversy-bar-fill" style="width:${(count/c.total)*100}%;background:${color};"></div>
-          </div>
-          <span class="controversy-bar-pct" style="color:${color};">${count}/${c.total} (${pct}%)</span>
-        </div>
-      `;
+    // For S16, use actual matchup teams as the two sides
+    // For deeper rounds, show top picks as "sides"
+    let leftTeam, rightTeam, leftSeed, rightSeed, leftProb, rightProb;
+    let leftPickers = [], rightPickers = [], leftCount = 0, rightCount = 0;
+
+    if (g.type === 's16') {
+      leftTeam = g.t1; rightTeam = g.t2;
+      leftSeed = `(${g.s1})`; rightSeed = `(${g.s2})`;
+      leftProb = g.prob1; rightProb = g.prob2;
+      leftCount = g.picks[g.t1] ? g.picks[g.t1].count : 0;
+      rightCount = g.picks[g.t2] ? g.picks[g.t2].count : 0;
+      leftPickers = g.picks[g.t1] ? g.picks[g.t1].names : [];
+      rightPickers = g.picks[g.t2] ? g.picks[g.t2].names : [];
+    } else {
+      // Use top two alive picks
+      if (sorted.length >= 2) {
+        leftTeam = sorted[0][0]; rightTeam = sorted[1][0];
+        leftCount = sorted[0][1].count; rightCount = sorted[1][1].count;
+        leftPickers = sorted[0][1].names; rightPickers = sorted[1][1].names;
+      } else if (sorted.length === 1) {
+        leftTeam = sorted[0][0]; rightTeam = '—';
+        leftCount = sorted[0][1].count; rightCount = 0;
+        leftPickers = sorted[0][1].names; rightPickers = [];
+      } else {
+        leftTeam = '—'; rightTeam = '—';
+      }
+      leftSeed = ''; rightSeed = '';
+      leftProb = g.prob1; rightProb = g.prob2;
+    }
+
+    // Additional picks (3rd, 4th, etc.) for multi-team rounds
+    let otherPicks = '';
+    if (g.type !== 's16' && sorted.length > 2) {
+      const others = sorted.slice(2).map(([team,d]) =>
+        `<span class="mc-picker" style="background:var(--bg-3);color:var(--text-2);">${team} (${d.count}): ${d.names.join(', ')}</span>`
+      ).join('');
+      otherPicks = `<div class="mc-dead-section" style="background:var(--bg-1);">
+        <span class="mc-dead-label">Also picked:</span>${others}</div>`;
+    }
+
+    // Controversy score badge
+    const cScore = g.controversy;
+    const cColor = cScore >= 50 ? 'var(--rose)' : cScore >= 30 ? 'var(--orange)' : 'var(--amber)';
+    const cBg = cScore >= 50 ? 'var(--rose-dim)' : cScore >= 30 ? 'var(--orange-dim)' : 'var(--amber-dim)';
+
+    // Dead picks
+    let deadHtml = '';
+    if (deadSorted.length > 0) {
+      const deadChips = deadSorted.map(([team,d]) =>
+        `<span class="mc-dead-pick">${team} (${d.count}): ${d.names.join(', ')}</span>`
+      ).join('');
+      deadHtml = `<div class="mc-dead-section"><span class="mc-dead-label">Eliminated picks:</span>${deadChips}</div>`;
+    }
+
+    // Pool split bar
+    const allPicks = [...sorted, ...deadSorted.map(([t,d])=>[t+'†',d])];
+    const barColors = ['var(--emerald)','var(--sky)','var(--violet)','var(--orange)','var(--amber)'];
+    let splitHtml = allPicks.map(([t,d],si) => {
+      const w = (d.count/total*100).toFixed(1);
+      const isDead = t.endsWith('†');
+      const col = isDead ? 'var(--bg-4)' : barColors[si%barColors.length];
+      return `<div class="mc-sb-seg" style="width:${w}%;background:${col};"></div>`;
     }).join('');
 
-    const marketNote = c.marketProb > 0
-      ? `<div class="controversy-market-note">Market favorite: ${c.marketFav} at ${c.marketProb}%</div>`
-      : '';
+    // Pickers display (show all if ≤8, otherwise show count)
+    function pickersHtml(names, count) {
+      if(count === 0) return '';
+      const chips = names.map(n => `<span class="mc-picker">${n}</span>`).join('');
+      return `<div class="mc-pickers">${chips}</div>`;
+    }
+
+    const resolvedBadge = isResolved ? `<span class="resolved-badge" style="background:var(--emerald-dim);color:var(--emerald);">Final: ${g.winner}</span>` : '';
 
     list.innerHTML += `
-      <div class="card controversy-item">
-        <div class="controversy-score" style="background:${scoreBg};color:${scoreColor};">${c.score}</div>
-        <div class="controversy-body">
-          <div class="controversy-matchup-name">${c.name}</div>
-          <div class="controversy-round-label">${c.round}${c.region ? ' &middot; ' + c.region : ''} &middot; ${c.pts} pts</div>
-          <div class="controversy-bars">${barsHtml}</div>
-          ${marketNote}
+      <div class="mc ${isResolved?'resolved':''}">
+        <div class="mc-side">
+          <div class="mc-team"><span class="mc-seed">${leftSeed}</span> ${leftTeam}</div>
+          <div class="mc-stats">
+            <span><span class="mc-stat-label">Pool </span><span class="mc-stat-val" style="color:var(--emerald);">${Math.round(leftCount/total*100)}%</span></span>
+            <span><span class="mc-stat-label">Win </span><span class="mc-stat-val" style="color:var(--sky);">${leftProb}%</span></span>
+            <span><span class="mc-stat-label">${leftCount}/${total}</span></span>
+          </div>
+          ${pickersHtml(leftPickers, leftCount)}
         </div>
+        <div class="mc-mid">
+          <div class="mc-round">${g.round}</div>
+          <div class="mc-vs">vs</div>
+          <div class="mc-pts-label">${g.pts} pts</div>
+          ${g.region?`<div class="mc-round">${g.region}</div>`:''}
+          <div class="mc-score" style="background:${cBg};color:${cColor};">${cScore}</div>
+          ${resolvedBadge}
+        </div>
+        <div class="mc-side right">
+          <div class="mc-team">${rightTeam} <span class="mc-seed">${rightSeed}</span></div>
+          <div class="mc-stats">
+            <span><span class="mc-stat-label">Pool </span><span class="mc-stat-val" style="color:var(--emerald);">${Math.round(rightCount/total*100)}%</span></span>
+            <span><span class="mc-stat-label">Win </span><span class="mc-stat-val" style="color:var(--sky);">${rightProb}%</span></span>
+            <span><span class="mc-stat-label">${rightCount}/${total}</span></span>
+          </div>
+          ${pickersHtml(rightPickers, rightCount)}
+        </div>
+        <div class="mc-splitbar"><div class="mc-sb">${splitHtml}</div></div>
+        ${otherPicks}
+        ${deadHtml}
       </div>
     `;
   });
 }
 
-// ====================================================================
-// INIT
-// ====================================================================
-renderStatsBar();
-renderLeaderboard();
-renderChampGrid();
-renderMatchupGrid();
-renderFlowGrid();
-renderControversies();
+// ============================================================
+renderLB();
+renderChamp();
+renderMatchups();
 </script>
 </body>
 </html>
