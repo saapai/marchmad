@@ -255,8 +255,9 @@ function renderRounds(){
         if(AL.has(pk)){if(!picks[pk])picks[pk]={c:0,n:[]};picks[pk].c++;picks[pk].n.push(b.n)}
         else{if(!dead[pk])dead[pk]={c:0,n:[]};dead[pk].c++;dead[pk].n.push(b.n)}
       });
+      const liveTotal=Object.values(picks).reduce((s,v)=>s+v.c,0);
       const topC=Math.max(...Object.values(picks).map(v=>v.c),0);
-      const ctrv=topC>0?Math.round((1-topC/T)*100):0;
+      const ctrv=liveTotal>1?Math.round((1-topC/liveTotal)*100):0;
       games.push({i,picks,dead,ctrv,...slot});
     });
     games.sort((a,b)=>b.ctrv-a.ctrv);
@@ -327,7 +328,7 @@ function renderRounds(){
             <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t4)">${lc}/${T} picked</span>
           </div>
           <div class="st2">
-            <span><span class="sl">Mkt </span><span class="sv2" style="color:var(--sk)">${lp}%</span></span>
+            <span><span class="sl">Odds </span><span class="sv2" style="color:var(--sk)">${lp}%</span></span>
           </div>
           <div class="pk">${lpk}</div>
         </div>
@@ -343,7 +344,7 @@ function renderRounds(){
             <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t4)">${rc}/${T} picked</span>
           </div>
           <div class="st2">
-            <span><span class="sl">Mkt </span><span class="sv2" style="color:var(--sk)">${rp}%</span></span>
+            <span><span class="sl">Odds </span><span class="sv2" style="color:var(--sk)">${rp}%</span></span>
           </div>
           <div class="pk">${rpk}</div>
         </div>
