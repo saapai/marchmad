@@ -257,7 +257,8 @@ function renderRounds(){
       });
       const liveTotal=Object.values(picks).reduce((s,v)=>s+v.c,0);
       const topC=Math.max(...Object.values(picks).map(v=>v.c),0);
-      const ctrv=liveTotal>1?Math.round((1-topC/liveTotal)*100):0;
+      const minority=liveTotal-topC;
+      const ctrv=Math.round(minority/(T/2)*100);
       games.push({i,picks,dead,ctrv,...slot});
     });
     games.sort((a,b)=>b.ctrv-a.ctrv);
