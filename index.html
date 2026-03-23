@@ -85,7 +85,12 @@
     .tb tr.top td { background:rgba(252,211,77,0.03); }
 
     .rk { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:var(--text-3); }
-    .rk.g { color:var(--amber); }
+    .rk.gold { color:#fcd34d; }
+    .rk.silver { color:#c0c0c0; }
+    .rk.bronze { color:#cd7f32; }
+    .tb tr.rank-1 td { background:rgba(252,211,77,0.04); }
+    .tb tr.rank-2 td { background:rgba(192,192,192,0.03); }
+    .tb tr.rank-3 td { background:rgba(205,127,50,0.03); }
     .ch-badge {
       display:inline-flex; align-items:center; padding:3px 8px; border-radius:5px;
       font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; white-space:nowrap;
@@ -414,11 +419,12 @@ function renderLB() {
   B.forEach((b,i) => {
     if(b.s!==prev){rank=i+1;prev=b.s;}
     const proj = calcProj(b);
-    const top = rank===1;
     const pctC = b.p>=90?'var(--emerald)':b.p>=70?'var(--text-1)':b.p>=50?'var(--text-2)':'var(--text-3)';
     const projC = proj>=780?'var(--emerald)':proj>=700?'var(--sky)':'var(--text-2)';
-    body.innerHTML += `<tr class="${top?'top':''}">
-      <td class="c"><span class="rk ${top?'g':''}">${rank}</span></td>
+    const medalCls = rank===1?'gold':rank===2?'silver':rank<=3?'bronze':'';
+    const rowCls = rank<=3?`rank-${rank}`:'';
+    body.innerHTML += `<tr class="${rowCls}">
+      <td class="c"><span class="rk ${medalCls}">${rank}</span></td>
       <td><span class="ch-badge" style="background:${champBg(b.ch)};color:${champFg(b.ch)};">(${b.cs}) ${b.ch}</span></td>
       <td><div class="nm">${b.n}</div><div class="ow">${b.o}</div></td>
       <td class="r"><span class="pts">${b.s}</span></td>
