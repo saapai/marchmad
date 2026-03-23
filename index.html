@@ -38,7 +38,7 @@
 
     /* Table */
     .tw{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;min-width:860px}
+    table{width:100%;border-collapse:collapse;min-width:920px}
     th{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);padding:10px 10px;text-align:left;border-bottom:1px solid var(--bds);background:var(--s1);position:sticky;top:0;z-index:1;cursor:default}
     th[data-tip]{position:relative}
     th[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 6px);background:#1a1a22;color:var(--t0);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;white-space:nowrap;padding:6px 12px;border-radius:6px;border:1px solid var(--s4);pointer-events:none;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.6)}
@@ -78,12 +78,12 @@
     .rnd-pts{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);padding:2px 6px;border-radius:3px;background:var(--s2)}
 
     /* Matchup card */
-    .gm{display:grid;grid-template-columns:1fr 72px 1fr;border-radius:8px;border:1px solid var(--bd);background:var(--s1);margin-bottom:8px;overflow:hidden}
+    .gm{display:grid;grid-template-columns:1fr 100px 1fr;border-radius:8px;border:1px solid var(--bd);background:var(--s1);margin-bottom:16px;overflow:hidden}
     .gm.dim{opacity:.4}
     .gs{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
     .gs.r{text-align:right;align-items:flex-end}
-    .gm-m{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--s2);border-left:1px solid var(--bd);border-right:1px solid var(--bd);gap:2px;padding:8px 4px}
-    .gm-m .rd{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:var(--t4)}
+    .gm-m{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--s2);border-left:1px solid var(--bd);border-right:1px solid var(--bd);gap:2px;padding:8px 6px;text-align:center}
+    .gm-m .rd{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:var(--t4);line-height:1.3}
     .gm-m .vs{font-weight:800;font-size:12px;color:var(--t4)}
     .gm-m .cs{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px}
     .gm-m .fin{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;background:var(--emd);color:var(--em)}
@@ -127,6 +127,7 @@
         <th class="c" style="width:36px" data-tip="Leaderboard rank by current points">#</th><th data-tip="Championship pick — team selected to win it all">Champ</th><th data-tip="Bracket name and entry owner">Bracket</th>
         <th class="r" data-tip="Total points scored so far">Pts</th><th class="r" data-tip="ESPN percentile — rank vs all public brackets">Pct</th><th class="r" data-tip="Projected final score using market-implied win probabilities">Proj</th>
         <th class="r" data-tip="Maximum possible points if all remaining picks win">Max</th><th class="r" data-tip="Wins and losses — includes future-round picks already eliminated">Record</th><th class="r" data-tip="Points scored in Round of 64">R64</th><th class="r" data-tip="Points scored in Round of 32">R32</th>
+        <th class="r" data-tip="How contrarian — more unique/upset-heavy picks score higher, weighted by round">Bold</th>
       </tr></thead><tbody id="lb"></tbody></table>
     </div></div>
   </div>
@@ -173,7 +174,7 @@ const T=B.length;
 const S16=[["Duke",1,"St. John's",5,73,"pending"],["UConn",2,"Michigan St",3,55,"pending"],["Iowa",9,"Nebraska",4,47,"pending"],["Houston",2,"Illinois",3,58,"pending"],["Arizona",1,"Arkansas",4,80,"pending"],["Purdue",2,"Texas",11,74,"pending"],["Michigan",1,"Alabama",4,80,"pending"],["Iowa State",2,"Tennessee",6,65,"pending"]];
 const S16R=["East","East","South","South","West","West","Midwest","Midwest"];
 const E8L=["East Final","South Final","West Final","Midwest Final"];
-const FFL=["East vs South","West vs Midwest"];
+const FFL=["E vs S","W vs MW"];
 const AL=new Set(["Duke","St. John's","UConn","Michigan St","Iowa","Nebraska","Houston","Illinois","Arizona","Arkansas","Purdue","Texas","Michigan","Alabama","Iowa State","Tennessee"]);
 const PS={Duke:.73,"St. John's":.27,UConn:.55,"Michigan St":.45,Houston:.58,Illinois:.42,Arizona:.80,Arkansas:.20,Purdue:.74,Texas:.26,Michigan:.80,Alabama:.20,"Iowa State":.65,Tennessee:.35};
 const PE={Duke:.52,"St. John's":.16,"Michigan St":.16,UConn:.16,Houston:.41,Illinois:.28,Nebraska:.20,Iowa:.11,Arizona:.58,Purdue:.30,Arkansas:.09,Texas:.04,Michigan:.56,"Iowa State":.27,Tennessee:.12,Alabama:.06};
@@ -193,16 +194,26 @@ function proj(b){
   return Math.round(e);
 }
 
+function bold(b){
+  let s=0,w=0;
+  b.s16.forEach((pk,i)=>{const c=B.filter(x=>x.s16[i]===pk).length;s+=(1-c/T);w++});
+  b.e8.forEach((pk,i)=>{const c=B.filter(x=>x.e8[i]===pk).length;s+=(1-c/T)*2;w+=2});
+  b.ff.forEach((pk,i)=>{const c=B.filter(x=>x.ff[i]===pk).length;s+=(1-c/T)*4;w+=4});
+  const cc=B.filter(x=>x.ch===b.ch).length;s+=(1-cc/T)*8;w+=8;
+  return Math.round(s/w*100);
+}
+
 // Leaderboard
 function renderLeaderboard(){
   const el=document.getElementById('lb');el.innerHTML='';let rk=0,pv=-1;
   B.forEach((b,i)=>{
     if(b.s!==pv){rk=i+1;pv=b.s}
-    const pj=proj(b);
+    const pj=proj(b);const bd=bold(b);
     const mc=rk===1?'g':rk===2?'sv':rk<=3?'bz':'';
     const rc=rk===1?'g':rk===2?'sv':rk<=3?'bz':'';
     const pcc=b.p>=90?'var(--em)':b.p>=70?'var(--t1)':b.p>=50?'var(--t2)':'var(--t3)';
     const pjc=pj>=780?'var(--em)':pj>=700?'var(--sk)':'var(--t2)';
+    const bdc=bd>=50?'var(--ro)':bd>=30?'var(--or)':'var(--t2)';
     el.innerHTML+=`<tr class="${rc}"><td class="c"><span class="rk ${mc}">${rk}</span></td>
       <td><span class="cb" style="background:${cbg(b.ch)};color:${cfg(b.ch)}">(${b.cs}) ${b.ch}</span></td>
       <td><div class="nm">${b.n}</div><div class="ow">${b.o}</div></td>
@@ -212,7 +223,8 @@ function renderLeaderboard(){
       <td class="r"><span class="mx">${b.mx}</span></td>
       <td class="r"><span class="rc"><span class="w">${b.w}W</span><span style="color:var(--t4)">-</span><span class="l">${b.l}L</span></span></td>
       <td class="r"><span class="rp">${b.r64}</span></td>
-      <td class="r"><span class="rp">${b.r32}</span></td></tr>`;
+      <td class="r"><span class="rp">${b.r32}</span></td>
+      <td class="r"><span class="m" style="font-size:11px;font-weight:600;color:${bdc}">${bd}</span></td></tr>`;
   });
 }
 renderLeaderboard();
@@ -258,7 +270,7 @@ function renderRounds(){
       const liveTotal=Object.values(picks).reduce((s,v)=>s+v.c,0);
       const topC=Math.max(...Object.values(picks).map(v=>v.c),0);
       const minority=liveTotal-topC;
-      const ctrv=Math.round(minority/(T/2)*100);
+      const ctrv=Math.min(100,Math.round(minority/(T/2)*100));
       games.push({i,picks,dead,ctrv,...slot});
     });
     games.sort((a,b)=>b.ctrv-a.ctrv);
@@ -268,7 +280,7 @@ function renderRounds(){
   const s16Slots=S16.map((m,i)=>({t1:m[0],s1:m[1],t2:m[2],s2:m[3],p1:m[4],p2:100-m[4],st:m[5],win:m[6],reg:S16R[i]}));
   const e8Slots=E8L.map((l,i)=>({label:l}));
   const ffSlots=FFL.map((l,i)=>({label:l}));
-  const chSlots=[{label:"National Champion"}];
+  const chSlots=[{label:"Champion"}];
 
   const rounds=[
     {name:"Sweet 16",pts:40,games:gather('s16',s16Slots),type:'s16'},
