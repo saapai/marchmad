@@ -39,8 +39,9 @@
     /* Table */
     .tw{overflow-x:auto}
     table{width:100%;border-collapse:collapse;min-width:860px}
-    th{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);padding:10px 10px;text-align:left;border-bottom:1px solid var(--bds);background:var(--s1);position:sticky;top:0;z-index:1;cursor:default;position:relative}
-    th[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 6px);background:var(--s3);color:var(--t1);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;white-space:nowrap;padding:5px 10px;border-radius:5px;border:1px solid var(--bds);pointer-events:none;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+    th{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);padding:10px 10px;text-align:left;border-bottom:1px solid var(--bds);background:var(--s1);position:sticky;top:0;z-index:1;cursor:default}
+    th[data-tip]{position:relative}
+    th[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;transform:translateX(-50%);top:calc(100% + 6px);background:#1a1a22;color:var(--t0);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;white-space:nowrap;padding:6px 12px;border-radius:6px;border:1px solid var(--s4);pointer-events:none;z-index:20;box-shadow:0 8px 24px rgba(0,0,0,.6)}
     th.r,td.r{text-align:right}th.c,td.c{text-align:center}
     td{padding:8px 10px;border-bottom:1px solid var(--bd);font-size:13px;vertical-align:middle}
     tr:hover td{background:rgba(255,255,255,.012)}
@@ -169,7 +170,7 @@ const B=[
   {n:"Realistic",o:"Realistic",ch:"Duke",cs:1,s:360,p:7,w:29,l:23,mx:1440,r64:210,r32:150,s16:["Duke","UCLA","Florida","Penn","Arizona","Purdue","Michigan","Tennessee"],e8:["Duke","Florida","Purdue","Michigan"],ff:["Duke","Purdue"]},
 ];
 const T=B.length;
-const S16=[["Duke",1,"St. John's",5,73,"pending"],["UConn",2,"Michigan St",3,55,"pending"],["Iowa",9,"Nebraska",4,47,"resolved","Iowa"],["Houston",2,"Illinois",3,58,"pending"],["Arizona",1,"Arkansas",4,80,"pending"],["Purdue",2,"Texas",11,74,"pending"],["Michigan",1,"Alabama",4,80,"pending"],["Iowa State",2,"Tennessee",6,65,"pending"]];
+const S16=[["Duke",1,"St. John's",5,73,"pending"],["UConn",2,"Michigan St",3,55,"pending"],["Iowa",9,"Nebraska",4,47,"pending"],["Houston",2,"Illinois",3,58,"pending"],["Arizona",1,"Arkansas",4,80,"pending"],["Purdue",2,"Texas",11,74,"pending"],["Michigan",1,"Alabama",4,80,"pending"],["Iowa State",2,"Tennessee",6,65,"pending"]];
 const S16R=["East","East","South","South","West","West","Midwest","Midwest"];
 const E8L=["East Final","South Final","West Final","Midwest Final"];
 const FFL=["East vs South","West vs Midwest"];
@@ -193,8 +194,8 @@ function proj(b){
 }
 
 // Leaderboard
-!function(){
-  const el=document.getElementById('lb');let rk=0,pv=-1;
+function renderLeaderboard(){
+  const el=document.getElementById('lb');el.innerHTML='';let rk=0,pv=-1;
   B.forEach((b,i)=>{
     if(b.s!==pv){rk=i+1;pv=b.s}
     const pj=proj(b);
@@ -213,11 +214,12 @@ function proj(b){
       <td class="r"><span class="rp">${b.r64}</span></td>
       <td class="r"><span class="rp">${b.r32}</span></td></tr>`;
   });
-}();
+}
+renderLeaderboard();
 
 // Champion cards with entries listed
-!function(){
-  const el=document.getElementById('cg');
+function renderChampCards(){
+  const el=document.getElementById('cg');el.innerHTML='';
   const ct={};B.forEach(b=>{if(!ct[b.ch])ct[b.ch]={count:0,names:[]};ct[b.ch].count++;ct[b.ch].names.push(b.n)});
   const sorted=Object.entries(ct).sort((a,b)=>b[1].count-a[1].count);
   const mx=sorted[0][1].count;
@@ -228,20 +230,21 @@ function proj(b){
     el.innerHTML+=`<div class="cc">
       <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="tn">${team}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3)">${d.count}/${T}</span></div>
       <div class="bar"><div class="bar-f" style="width:${d.count/mx*100}%;background:var(--em)"></div></div>
+      <div style="margin:2px 0"><span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;color:var(--em)">${pct}%</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t4);margin-left:4px">pool</span></div>
       <div class="odds">
-        <span style="color:var(--em)">Pool ${pct}%</span>
         <span style="color:var(--vi)">Poly ${pp}%</span>
         <span style="color:var(--sk)">Kalshi ${kp}%</span>
-        ${m?`<span>${m.b}</span>`:''}
+        ${m?`<span style="color:var(--t3)">${m.b}</span>`:''}
       </div>
       <div class="names">${names}</div>
     </div>`;
   });
-}();
+}
+renderChampCards();
 
 // Games grouped by round, sorted by controversy within each
-!function(){
-  const el=document.getElementById('rounds');
+function renderRounds(){
+  const el=document.getElementById('rounds');el.innerHTML='';
 
   function gather(type,slots){
     const games=[];
@@ -319,24 +322,28 @@ function proj(b){
       html+=`<div class="gm${isResolved?' dim':''}">
         <div class="gs">
           <div class="tn"><span class="sd">${ls} </span>${lt}</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:var(--em)">${Math.round(lc/T*100)}%</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t4)">${lc}/${T} picked</span>
+          </div>
           <div class="st2">
-            <span><span class="sl">Pool </span><span class="sv2" style="color:var(--em)">${Math.round(lc/T*100)}%</span></span>
-            <span><span class="sl">Win </span><span class="sv2" style="color:var(--sk)">${lp}%</span></span>
-            <span class="sl">${lc}/${T}</span>
+            <span><span class="sl">Mkt </span><span class="sv2" style="color:var(--sk)">${lp}%</span></span>
           </div>
           <div class="pk">${lpk}</div>
         </div>
         <div class="gm-m">
           <div class="rd">${region}</div>
           <div class="vs">vs</div>
-          ${isResolved?`<div class="fin">✓ ${g.win}</div>`:`<div class="cs" style="background:${cBg};color:${cCol}">${cScore}</div>`}
+          ${isResolved?`<div class="fin">✓ ${g.win}</div>`:`<div style="font-family:'JetBrains Mono',monospace;font-size:7px;text-transform:uppercase;letter-spacing:.5px;color:var(--t4)">Controversy</div><div class="cs" style="background:${cBg};color:${cCol}">${cScore}</div>`}
         </div>
         <div class="gs r">
           <div class="tn">${rt}<span class="sd"> ${rs}</span></div>
+          <div style="display:flex;align-items:baseline;gap:6px;justify-content:flex-end">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:var(--em)">${Math.round(rc/T*100)}%</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t4)">${rc}/${T} picked</span>
+          </div>
           <div class="st2">
-            <span><span class="sl">Pool </span><span class="sv2" style="color:var(--em)">${Math.round(rc/T*100)}%</span></span>
-            <span><span class="sl">Win </span><span class="sv2" style="color:var(--sk)">${rp}%</span></span>
-            <span class="sl">${rc}/${T}</span>
+            <span><span class="sl">Mkt </span><span class="sv2" style="color:var(--sk)">${rp}%</span></span>
           </div>
           <div class="pk">${rpk}</div>
         </div>
@@ -347,49 +354,56 @@ function proj(b){
     html+=`</div>`;
     el.innerHTML+=html;
   });
-}();
+}
+renderRounds();
 
-// Live updates — fetch ESPN scores + Polymarket odds every 60s
+// Live updates via serverless proxy — avoids CORS
 async function liveUpdate(){
   try{
-    // Fetch challenge data for latest scores
-    const r=await fetch('https://gambit-api.fantasy.espn.com/apis/v1/challenges/277?scoringPeriodId=3');
-    if(r.ok){
-      const d=await r.json();
-      // Update S16 game results if any resolved
-      if(d.propositions){
-        d.propositions.forEach(prop=>{
-          if(prop.scoringPeriodId===3 && prop.settled){
-            const idx=prop.sortOrder-1;
-            if(idx>=0&&idx<S16.length&&S16[idx][5]==='pending'){
-              const winOutcome=prop.outcomes.find(o=>o.winner);
-              if(winOutcome){
-                S16[idx][5]='resolved';
-                S16[idx][6]=winOutcome.competitor?.name||'';
-                document.getElementById('live-badge').textContent='Updated '+new Date().toLocaleTimeString();
-              }
-            }
-          }
-        });
-      }
-    }
-  }catch(e){/* CORS or network — silent fail */}
+    const r=await fetch('/api/scores');
+    if(!r.ok)return;
+    const d=await r.json();
+    let changed=false;
 
-  try{
-    // Fetch Polymarket championship odds
-    const r2=await fetch('https://gamma-api.polymarket.com/markets?closed=false&limit=20&slug=2026-ncaa-tournament-winner');
-    if(r2.ok){
-      const d2=await r2.json();
-      // Could update MK object here if response contains team-level data
+    // Update resolved S16 games
+    if(d.resolved){
+      d.resolved.forEach(g=>{
+        const idx=g.sortOrder-1;
+        if(idx>=0&&idx<S16.length&&g.settled&&g.winner&&S16[idx][5]==='pending'){
+          S16[idx][5]='resolved';
+          S16[idx][6]=g.winner;
+          changed=true;
+        }
+      });
     }
-  }catch(e){/* silent */}
 
-  document.getElementById('update-ts').textContent='Updated '+new Date().toLocaleTimeString();
+    // Update entry scores
+    if(d.entries&&d.entries.length>0){
+      d.entries.forEach(e=>{
+        const b=B.find(x=>x.n===e.name);
+        if(b&&e.score!=null){
+          b.s=e.score;
+          if(e.percentile!=null)b.p=e.percentile;
+          if(e.wins!=null){b.w=e.wins;b.l=e.losses||0}
+          changed=true;
+        }
+      });
+    }
+
+    if(changed){
+      B.sort((a,b)=>b.s-a.s);
+      renderLeaderboard();
+      renderChampCards();
+      renderRounds();
+      document.getElementById('live-badge').textContent='Live — '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+    }
+    document.getElementById('update-ts').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+  }catch(e){
+    document.getElementById('update-ts').textContent='Offline — '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+  }
 }
-
-// Initial + interval
-liveUpdate();
 setInterval(liveUpdate,60000);
+setTimeout(liveUpdate,3000);
 </script>
 </body>
 </html>
