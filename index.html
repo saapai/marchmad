@@ -84,7 +84,7 @@
     .rnd-pts{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);padding:3px 8px;border-radius:4px;background:var(--s2)}
 
     /* Matchup card */
-    .gm{display:grid;grid-template-columns:1fr 90px 1fr;border-radius:var(--r);border:1px solid rgba(255,255,255,.10);background:var(--s1);margin-bottom:16px;overflow:hidden;transition:border-color .15s ease}
+    .gm{display:grid;grid-template-columns:1fr 90px 1fr;border-radius:var(--r);border:1px solid rgba(255,255,255,.10);background:var(--s1);margin-bottom:18px;overflow:hidden;transition:border-color .15s ease}
     .gm:hover{border-color:rgba(255,255,255,.18)}
     .gm.dim{opacity:.35}
     .gs{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
@@ -354,7 +354,8 @@ function renderRounds(){
           const names=e.n.length<=3?e.n.join(', '):e.n.slice(0,3).join(', ')+` +${e.n.length-3}`;
           return `<span class="${cls}">${e.t} (${e.c}): ${names}</span>`;
         }).join(' &middot; ');
-        extraHtml=`<div class="gm-ex">${parts}</div>`;
+        const label=extras.some(e=>e.dead)?'Other:':'Also:';
+        extraHtml=`<div class="gm-ex"><span style="margin-right:4px">${label}</span>${parts}</div>`;
       }
 
       html+=`<div class="gm${isResolved?' dim':''}">
@@ -364,7 +365,7 @@ function renderRounds(){
             <span class="pct" style="color:${lCol}">${lPct}%</span>
             <span class="pct-sub">${lc}/${T} picked</span>
           </div>
-          <div class="odds-line">${lp}% <span class="odds-val">odds</span></div>
+          <div class="odds-line"><span class="odds-val">Odds</span> ${lp}%</div>
           <div class="picks">${lNames}</div>
         </div>
         <div class="gm-m">
@@ -378,7 +379,7 @@ function renderRounds(){
             <span class="pct" style="color:${rCol}">${rPct}%</span>
             <span class="pct-sub">${rc}/${T} picked</span>
           </div>
-          <div class="odds-line">${rp}% <span class="odds-val">odds</span></div>
+          <div class="odds-line"><span class="odds-val">Odds</span> ${rp}%</div>
           <div class="picks">${rNames}</div>
         </div>
         ${extraHtml}
