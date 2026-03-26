@@ -56,6 +56,8 @@
     tr.bz td{background:rgba(205,127,50,.02)}
     .rk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;color:var(--t3);width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px}
     .rk.g{color:#fbbf24;background:rgba(251,191,36,.1)}.rk.sv{color:#a8a8b0;background:rgba(168,168,176,.07)}.rk.bz{color:#cd7f32;background:rgba(205,127,50,.07)}
+    .rd-wrap{display:inline-flex;align-items:center;gap:4px}
+    .rk-delta{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600}
     .cb{display:inline-flex;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;white-space:nowrap}
     .nm{font-weight:600;color:var(--t0);font-size:13px}
     .ow{font-size:10px;color:var(--t4);margin-top:1px}
@@ -215,9 +217,28 @@ function bold(b){
   return Math.round(s/w*100);
 }
 
+// Rank tracking — store daily rankings in localStorage
+function getTodayKey(){return 'ranks_'+new Date().toISOString().slice(0,10)}
+function getYesterdayKey(){const d=new Date();d.setDate(d.getDate()-1);return 'ranks_'+d.toISOString().slice(0,10)}
+function loadPrevRanks(){
+  try{const d=localStorage.getItem(getYesterdayKey());return d?JSON.parse(d):null}catch(e){return null}
+}
+function saveRanks(ranks){
+  try{localStorage.setItem(getTodayKey(),JSON.stringify(ranks))}catch(e){}
+}
+
 // Leaderboard
 function renderLeaderboard(){
   const el=document.getElementById('lb');el.innerHTML='';let rk=0,pv=-1;
+  const prevRanks=loadPrevRanks();
+  const curRanks={};
+  // First pass: compute current ranks
+  B.forEach((b,i)=>{
+    if(b.s!==pv){rk=i+1;pv=b.s}
+    curRanks[b.n]=rk;
+  });
+  saveRanks(curRanks);
+  rk=0;pv=-1;
   B.forEach((b,i)=>{
     if(b.s!==pv){rk=i+1;pv=b.s}
     const pj=proj(b);const bd=bold(b);
@@ -226,7 +247,14 @@ function renderLeaderboard(){
     const pcc=b.p>=90?'var(--em)':b.p>=70?'var(--t0)':b.p>=50?'var(--t2)':'var(--t3)';
     const pjc=pj>=780?'var(--t0)':pj>=700?'var(--t1)':'var(--t2)';
     const bdc=bd>=50?'var(--or)':bd>=30?'var(--am)':'var(--t2)';
-    el.innerHTML+=`<tr class="${rc}"><td class="c"><span class="rk ${mc}">${rk}</span></td>
+    // Rank change delta
+    let deltaHtml='';
+    if(prevRanks&&prevRanks[b.n]!=null){
+      const diff=prevRanks[b.n]-rk; // positive = moved up
+      if(diff>0)deltaHtml=`<span class="rk-delta" style="color:var(--em)">▲${diff}</span>`;
+      else if(diff<0)deltaHtml=`<span class="rk-delta" style="color:var(--ro)">▼${Math.abs(diff)}</span>`;
+    }
+    el.innerHTML+=`<tr class="${rc}"><td class="c"><div class="rd-wrap"><span class="rk ${mc}">${rk}</span>${deltaHtml}</div></td>
       <td><span class="cb" style="background:${cbg(b.ch)};color:${cfg(b.ch)}">(${b.cs}) ${b.ch}</span></td>
       <td><div class="nm">${b.n}</div><div class="ow">${b.o}</div></td>
       <td class="r"><span class="pt">${b.s}</span></td>
