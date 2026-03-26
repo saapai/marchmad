@@ -86,8 +86,8 @@
     .rnd-pts{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);padding:3px 8px;border-radius:4px;background:var(--s2)}
 
     /* Matchup card */
-    .gm{display:grid;grid-template-columns:1fr 90px 1fr;border-radius:var(--r);border:1px solid rgba(255,255,255,.10);background:var(--s1);margin-bottom:18px;overflow:hidden;transition:border-color .15s ease}
-    .gm:hover{border-color:rgba(255,255,255,.18)}
+    .gm{display:grid;grid-template-columns:1fr 90px 1fr;border-radius:var(--r);border:1px solid rgba(255,255,255,.15);background:var(--s1);margin-bottom:28px;overflow:hidden;transition:border-color .15s ease}
+    .gm:hover{border-color:rgba(255,255,255,.25)}
     .gm.dim{opacity:.35}
     .gs{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
     .gs.r{text-align:right;align-items:flex-end}
@@ -108,6 +108,25 @@
     .gm-ex .dead{color:var(--ro);opacity:.6;text-decoration:line-through}
     .gm-ex .alive{color:var(--t3)}
 
+    /* Bracket progression */
+    .bp{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:12px;overflow:hidden;transition:border-color .15s ease}
+    .bp:hover{border-color:rgba(255,255,255,.12)}
+    .bp-h{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none}
+    .bp-h .bp-nm{font-weight:600;font-size:13px;color:var(--t0)}
+    .bp-h .bp-sc{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--t0)}
+    .bp-h .bp-ch{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);margin-left:8px}
+    .bp-h .bp-toggle{color:var(--t4);font-size:10px;transition:transform .15s ease}
+    .bp-b{display:none;padding:0 16px 14px}
+    .bp.open .bp-b{display:block}
+    .bp.open .bp-toggle{transform:rotate(180deg)}
+    .bp-rd{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    .bp-rd-label{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);font-weight:600;min-width:28px;padding-top:3px}
+    .bp-pk{display:inline-flex;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;margin:1px 0}
+    .bp-pk.correct{background:var(--emd);color:var(--em)}
+    .bp-pk.wrong{background:var(--rod);color:var(--ro);text-decoration:line-through;opacity:.6}
+    .bp-pk.alive{background:var(--s2);color:var(--t2)}
+    .bp-pk.dead{background:var(--rod);color:var(--ro);opacity:.4}
+
     /* Footer */
     footer{padding:24px 0;border-top:1px solid var(--bd);margin-top:36px}
     footer p{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t4)}
@@ -118,12 +137,14 @@
       .c{padding:0 16px}
       .hd{padding:32px 0 24px}
       .hd h1{font-size:20px}
-      .gm{grid-template-columns:1fr;margin-bottom:20px;border:1px solid rgba(255,255,255,.14)}
+      .gm{grid-template-columns:1fr;margin-bottom:32px;border:1px solid rgba(255,255,255,.22)}
       .gm-m{flex-direction:row;border-left:none;border-right:none;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:8px 16px;gap:12px}
       .gs{padding:14px 16px}
       .gs.r{text-align:left;align-items:flex-start}
       .cg{grid-template-columns:repeat(2,1fr);gap:8px}
       .sec{margin:32px 0}
+      .bp-pk{font-size:9px;padding:2px 5px}
+      .bp-rd-label{font-size:8px;min-width:22px}
     }
   </style>
 </head>
@@ -155,6 +176,11 @@
   </div>
 
   <div id="rounds"></div>
+
+  <div class="sec" id="bracket-sec">
+    <div class="sh"><span class="st">Bracket Progression</span><span class="tg" style="background:var(--skd);color:var(--sk)">All 22 Brackets</span></div>
+    <div id="brackets"></div>
+  </div>
 
   <footer><p>ESPN Gambit API &middot; Polymarket &middot; Kalshi &middot; FanDuel/DK<span id="update-ts" style="float:right"></span></p></footer>
 </div>
@@ -300,16 +326,42 @@ function fmtNames(names,max){
   return names.slice(0,max).join(', ')+` <span class="more">+${names.length-max}</span>`;
 }
 
-// Games grouped by round, sorted by controversy
+// Confirmed matchup tracking for future rounds
+// E8 pairs: games 0+1 feed E8[0], 2+3 feed E8[1], 4+5 feed E8[2], 6+7 feed E8[3]
+// FF pairs: E8[0]+E8[1] feed FF[0], E8[2]+E8[3] feed FF[1]
+// CH: FF[0]+FF[1] feed CH
+const E8G=[[null,null],[null,null],[null,null],[null,null]]; // confirmed E8 matchups
+const FFG=[[null,null],[null,null]]; // confirmed FF matchups
+const CHG=[[null,null]]; // confirmed Championship matchup
+
+function updateConfirmed(){
+  // E8: each pair of S16 games feeds one E8 game
+  for(let i=0;i<4;i++){
+    const g1=S16[i*2],g2=S16[i*2+1];
+    E8G[i][0]=g1[5]==='resolved'?g1[6]:null;
+    E8G[i][1]=g2[5]==='resolved'?g2[6]:null;
+  }
+  // FF: each pair of E8 games feeds one FF game
+  // FF is only confirmed if both E8 games in that pair are fully resolved (both teams known)
+  // But E8 games themselves need to resolve, not just be "known"
+  // For now, E8 is "confirmed" when both teams are known. E8 resolution would come from API.
+  // We'll track E8 resolution separately
+  // For E8 resolution: we'll use a parallel tracking
+}
+updateConfirmed();
+
+// Games grouped by round — only show confirmed matchups
 function renderRounds(){
   const el=document.getElementById('rounds');el.innerHTML='';
+  updateConfirmed();
 
-  function gather(type,slots){
+  function gatherS16(){
     const games=[];
-    slots.forEach((slot,i)=>{
+    S16.forEach((m,i)=>{
+      const slot={t1:m[0],s1:m[1],t2:m[2],s2:m[3],p1:m[4],p2:100-m[4],st:m[5],win:m[6],reg:S16R[i]};
       const picks={},dead={};
       B.forEach(b=>{
-        const pk=type==='s16'?b.s16[i]:type==='e8'?b.e8[i]:type==='ff'?b.ff[i]:b.ch;
+        const pk=b.s16[i];
         if(AL.has(pk)){if(!picks[pk])picks[pk]={c:0,n:[]};picks[pk].c++;picks[pk].n.push(b.n)}
         else{if(!dead[pk])dead[pk]={c:0,n:[]};dead[pk].c++;dead[pk].n.push(b.n)}
       });
@@ -323,19 +375,43 @@ function renderRounds(){
     return games;
   }
 
-  const s16Slots=S16.map((m,i)=>({t1:m[0],s1:m[1],t2:m[2],s2:m[3],p1:m[4],p2:100-m[4],st:m[5],win:m[6],reg:S16R[i]}));
-  const e8Slots=E8L.map((l,i)=>({label:l}));
-  const ffSlots=FFL.map((l,i)=>({label:l}));
-  const chSlots=[{label:"Champion"}];
-
-  const rounds=[
-    {name:"Sweet 16",pts:40,games:gather('s16',s16Slots),type:'s16'},
-    {name:"Elite 8",pts:80,games:gather('e8',e8Slots),type:'e8'},
-    {name:"Final Four",pts:160,games:gather('ff',ffSlots),type:'ff'},
-    {name:"Championship",pts:320,games:gather('ch',chSlots),type:'ch'},
-  ];
+  function gatherConfirmed(type,confirmed,labels,pickKey){
+    const games=[];
+    confirmed.forEach((pair,i)=>{
+      if(!pair[0]||!pair[1])return; // skip if not yet confirmed
+      const t1=pair[0],t2=pair[1];
+      const picks={},dead={};
+      B.forEach(b=>{
+        const pk=type==='e8'?b.e8[i]:type==='ff'?b.ff[i]:b.ch;
+        if(AL.has(pk)){if(!picks[pk])picks[pk]={c:0,n:[]};picks[pk].c++;picks[pk].n.push(b.n)}
+        else{if(!dead[pk])dead[pk]={c:0,n:[]};dead[pk].c++;dead[pk].n.push(b.n)}
+      });
+      const liveTotal=Object.values(picks).reduce((s,v)=>s+v.c,0);
+      const topC=Math.max(...Object.values(picks).map(v=>v.c),0);
+      const minority=liveTotal-topC;
+      const ctrv=Math.min(100,Math.round(minority/(T/2)*100));
+      games.push({i,picks,dead,ctrv,t1,t2,label:labels[i],st:'pending'});
+    });
+    games.sort((a,b)=>b.ctrv-a.ctrv);
+    return games;
+  }
 
   const probMap={s16:PS,e8:PE,ff:PF,ch:PC};
+
+  // Always show S16
+  const rounds=[{name:"Sweet 16",pts:40,games:gatherS16(),type:'s16'}];
+
+  // E8: only if at least one E8 game has both teams confirmed
+  const e8Games=gatherConfirmed('e8',E8G,E8L);
+  if(e8Games.length>0)rounds.push({name:"Elite 8",pts:80,games:e8Games,type:'e8'});
+
+  // FF: only if at least one FF game confirmed
+  const ffGames=gatherConfirmed('ff',FFG,FFL);
+  if(ffGames.length>0)rounds.push({name:"Final Four",pts:160,games:ffGames,type:'ff'});
+
+  // Championship
+  const chGames=gatherConfirmed('ch',CHG,["Championship"]);
+  if(chGames.length>0)rounds.push({name:"Championship",pts:320,games:chGames,type:'ch'});
 
   rounds.forEach(round=>{
     let html=`<div class="rnd"><div class="rnd-h"><span class="rnd-t">${round.name}</span><span class="rnd-pts">${round.pts} pts per correct pick</span></div>`;
@@ -351,9 +427,10 @@ function renderRounds(){
         lc=g.picks[g.t1]?g.picks[g.t1].c:0;rc=g.picks[g.t2]?g.picks[g.t2].c:0;
         ln=g.picks[g.t1]?g.picks[g.t1].n:[];rn=g.picks[g.t2]?g.picks[g.t2].n:[];
       } else {
-        if(sorted.length>=2){lt=sorted[0][0];rt=sorted[1][0];lc=sorted[0][1].c;rc=sorted[1][1].c;ln=sorted[0][1].n;rn=sorted[1][1].n}
-        else if(sorted.length===1){lt=sorted[0][0];rt='—';lc=sorted[0][1].c;rc=0;ln=sorted[0][1].n;rn=[]}
-        else{lt='—';rt='—';lc=0;rc=0;ln=[];rn=[]}
+        // For confirmed future-round games, we know the two teams
+        lt=g.t1;rt=g.t2;
+        lc=g.picks[g.t1]?g.picks[g.t1].c:0;rc=g.picks[g.t2]?g.picks[g.t2].c:0;
+        ln=g.picks[g.t1]?g.picks[g.t1].n:[];rn=g.picks[g.t2]?g.picks[g.t2].n:[];
         ls='';rs='';
         const pm=probMap[round.type];
         const p1=pm[lt]||0,p2=pm[rt]||0,tot=p1+p2||1;
@@ -366,14 +443,12 @@ function renderRounds(){
       const region=g.reg||g.label||'';
 
       const lPct=Math.round(lc/T*100),rPct=Math.round(rc/T*100);
-      // Majority side gets green, minority gets muted
       const lCol=lc>rc?'var(--em)':lc===rc?'var(--em)':'var(--t3)';
       const rCol=rc>lc?'var(--em)':rc===lc?'var(--em)':'var(--t3)';
 
       const lNames=fmtNames(ln,6);
       const rNames=fmtNames(rn,6);
 
-      // Extra picks - clean inline text
       let extraHtml='';
       const extras=[...sorted.slice(2).map(([t,d])=>({t,c:d.c,n:d.n,dead:false})),...deadSorted.map(([t,d])=>({t,c:d.c,n:d.n,dead:true}))];
       if(extras.length>0){
@@ -420,6 +495,60 @@ function renderRounds(){
 }
 renderRounds();
 
+// Bracket progression — collapsible per-entry view
+function pickStatus(team,roundType,idx){
+  // Determine if a pick is correct, wrong, alive, or dead
+  if(roundType==='s16'){
+    const g=S16[idx];
+    if(g[5]==='resolved') return g[6]===team?'correct':'wrong';
+    return AL.has(team)?'alive':'dead';
+  }
+  // For E8/FF/Ch: pick is "dead" if team is eliminated, "alive" if still in
+  if(!AL.has(team))return 'dead';
+  return 'alive';
+}
+
+function renderBrackets(){
+  const el=document.getElementById('brackets');el.innerHTML='';
+  const regions=['East','East','South','South','West','West','Midwest','Midwest'];
+  B.forEach(b=>{
+    const rows=[];
+    // S16 row
+    const s16Pills=b.s16.map((pk,i)=>{
+      const st=pickStatus(pk,'s16',i);
+      return `<span class="bp-pk ${st}">${pk}</span>`;
+    }).join(' ');
+    rows.push(`<div class="bp-rd"><span class="bp-rd-label">S16</span>${s16Pills}</div>`);
+    // E8 row
+    const e8Pills=b.e8.map((pk,i)=>{
+      const st=pickStatus(pk,'e8',i);
+      return `<span class="bp-pk ${st}">${pk}</span>`;
+    }).join(' ');
+    rows.push(`<div class="bp-rd"><span class="bp-rd-label">E8</span>${e8Pills}</div>`);
+    // FF row
+    const ffPills=b.ff.map((pk,i)=>{
+      const st=pickStatus(pk,'ff',i);
+      return `<span class="bp-pk ${st}">${pk}</span>`;
+    }).join(' ');
+    rows.push(`<div class="bp-rd"><span class="bp-rd-label">FF</span>${ffPills}</div>`);
+    // Champion
+    const chSt=pickStatus(b.ch,'ch',0);
+    rows.push(`<div class="bp-rd"><span class="bp-rd-label">CH</span><span class="bp-pk ${chSt}">${b.ch}</span></div>`);
+
+    el.innerHTML+=`<div class="bp" onclick="this.classList.toggle('open')">
+      <div class="bp-h">
+        <div><span class="bp-nm">${b.n}</span><span class="bp-ch">${b.ch} champ</span></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="bp-sc">${b.s} pts</span>
+          <span class="bp-toggle">▼</span>
+        </div>
+      </div>
+      <div class="bp-b">${rows.join('')}</div>
+    </div>`;
+  });
+}
+renderBrackets();
+
 // Live updates via serverless proxy
 async function liveUpdate(){
   try{
@@ -430,13 +559,47 @@ async function liveUpdate(){
 
     if(d.resolved){
       d.resolved.forEach(g=>{
-        const idx=g.sortOrder-1;
-        if(idx>=0&&idx<S16.length&&g.settled&&g.winner&&S16[idx][5]==='pending'){
-          S16[idx][5]='resolved';
-          S16[idx][6]=g.winner;
-          const loser=S16[idx][0]===g.winner?S16[idx][2]:S16[idx][0];
-          AL.delete(loser);
-          changed=true;
+        // S16 resolution (period 3)
+        if(g.period===3){
+          const idx=g.sortOrder-1;
+          if(idx>=0&&idx<S16.length&&g.settled&&g.winner&&S16[idx][5]==='pending'){
+            S16[idx][5]='resolved';
+            S16[idx][6]=g.winner;
+            const loser=S16[idx][0]===g.winner?S16[idx][2]:S16[idx][0];
+            AL.delete(loser);
+            changed=true;
+          }
+        }
+        // E8 resolution (period 4) — mark winners, eliminate losers
+        if(g.period===4&&g.settled&&g.winner){
+          const idx=g.sortOrder-1;
+          if(idx>=0&&idx<E8G.length&&E8G[idx][0]&&E8G[idx][1]){
+            const loser=E8G[idx][0]===g.winner?E8G[idx][1]:E8G[idx][0];
+            AL.delete(loser);
+            // Feed FF matchups
+            const ffIdx=Math.floor(idx/2);
+            const ffSlot=idx%2;
+            FFG[ffIdx][ffSlot]=g.winner;
+            changed=true;
+          }
+        }
+        // FF resolution (period 5)
+        if(g.period===5&&g.settled&&g.winner){
+          const idx=g.sortOrder-1;
+          if(idx>=0&&idx<FFG.length&&FFG[idx][0]&&FFG[idx][1]){
+            const loser=FFG[idx][0]===g.winner?FFG[idx][1]:FFG[idx][0];
+            AL.delete(loser);
+            CHG[0][idx]=g.winner;
+            changed=true;
+          }
+        }
+        // Championship resolution (period 6)
+        if(g.period===6&&g.settled&&g.winner){
+          if(CHG[0][0]&&CHG[0][1]){
+            const loser=CHG[0][0]===g.winner?CHG[0][1]:CHG[0][0];
+            AL.delete(loser);
+            changed=true;
+          }
         }
       });
     }
@@ -458,6 +621,7 @@ async function liveUpdate(){
       renderLeaderboard();
       renderChampCards();
       renderRounds();
+      renderBrackets();
       document.getElementById('live-badge').textContent='Live \u2014 '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
     }
     document.getElementById('update-ts').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});

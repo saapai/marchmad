@@ -14,13 +14,14 @@ export default async function handler(req, res) {
       polyData = await poly.json();
     } catch (e) { /* optional */ }
 
-    // Extract resolved S16 games from ESPN propositions
+    // Extract resolved games from ESPN propositions (all rounds)
     const resolved = [];
     if (espnData.propositions) {
       espnData.propositions.forEach(prop => {
-        if (prop.scoringPeriodId === 3) {
+        if (prop.scoringPeriodId >= 3 && prop.scoringPeriodId <= 6) {
           const winOutcome = prop.settled ? prop.outcomes?.find(o => o.winner) : null;
           resolved.push({
+            period: prop.scoringPeriodId,
             sortOrder: prop.sortOrder,
             settled: !!prop.settled,
             winner: winOutcome?.competitor?.name || null
