@@ -338,9 +338,9 @@ function renderRounds(){
       const region=g.reg||g.label||'';
 
       const lPct=Math.round(lc/T*100),rPct=Math.round(rc/T*100);
-      // Majority side gets bright white, minority gets muted
-      const lCol=lc>=rc?'var(--t0)':'var(--t3)';
-      const rCol=rc>=lc?'var(--t0)':'var(--t3)';
+      // Majority side gets green, minority gets muted
+      const lCol=lc>rc?'var(--em)':lc===rc?'var(--em)':'var(--t3)';
+      const rCol=rc>lc?'var(--em)':rc===lc?'var(--em)':'var(--t3)';
 
       const lNames=fmtNames(ln,6);
       const rNames=fmtNames(rn,6);
