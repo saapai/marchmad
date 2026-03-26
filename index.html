@@ -78,7 +78,7 @@
     .rnd-pts{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);padding:2px 6px;border-radius:3px;background:var(--s2)}
 
     /* Matchup card */
-    .gm{display:grid;grid-template-columns:1fr 100px 1fr;border-radius:8px;border:1px solid var(--bd);background:var(--s1);margin-bottom:16px;overflow:hidden}
+    .gm{display:grid;grid-template-columns:1fr 100px 1fr;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:var(--s1);margin-bottom:24px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.3)}
     .gm.dim{opacity:.4}
     .gs{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
     .gs.r{text-align:right;align-items:flex-end}
@@ -106,7 +106,7 @@
     ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--s4);border-radius:2px}
 
     @media(max-width:700px){
-      .gm{grid-template-columns:1fr;margin-bottom:16px}
+      .gm{grid-template-columns:1fr;margin-bottom:28px}
       .gm-m{flex-direction:row;border-left:none;border-right:none;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:6px 12px}
       .gs.r{text-align:left;align-items:flex-start}.gs.r .st2{justify-content:flex-start}.gs.r .pk{justify-content:flex-start}
       .cg{grid-template-columns:repeat(2,1fr)}
@@ -379,13 +379,16 @@ async function liveUpdate(){
     const d=await r.json();
     let changed=false;
 
-    // Update resolved S16 games
+    // Update resolved S16 games and remove losers from active set
     if(d.resolved){
       d.resolved.forEach(g=>{
         const idx=g.sortOrder-1;
         if(idx>=0&&idx<S16.length&&g.settled&&g.winner&&S16[idx][5]==='pending'){
           S16[idx][5]='resolved';
           S16[idx][6]=g.winner;
+          // Remove loser from active teams
+          const loser=S16[idx][0]===g.winner?S16[idx][2]:S16[idx][0];
+          AL.delete(loser);
           changed=true;
         }
       });
