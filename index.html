@@ -568,81 +568,66 @@ function renderBrackets(){
 }
 renderBrackets();
 
+// Process API data — resolves games, updates scores, returns true if anything changed
+function matchTeams(a,b,x,y){a=a.toLowerCase();b=b.toLowerCase();x=x.toLowerCase();y=y.toLowerCase();return(a===x&&b===y)||(a===y&&b===x)}
+function processData(d){
+  let changed=false;
+  if(d.liveScores&&d.liveScores.length>0){
+    SCORES=d.liveScores;
+    const done=d.liveScores.filter(g=>g.completed);
+    // S16 resolution
+    done.forEach(g=>{
+      const winner=g.s1>g.s2?g.t1:g.t2;
+      for(let i=0;i<S16.length;i++){
+        const m=S16[i];
+        if(m[5]==='pending'&&matchTeams(m[0],m[2],g.t1,g.t2)){m[5]='resolved';m[6]=winner;AL.delete(m[0]===winner?m[2]:m[0]);changed=true;break}
+      }
+    });
+    updateConfirmed();
+    // E8 resolution
+    done.forEach(g=>{
+      const winner=g.s1>g.s2?g.t1:g.t2,loser=g.s1>g.s2?g.t2:g.t1;
+      for(let i=0;i<E8G.length;i++){if(E8G[i][0]&&E8G[i][1]&&matchTeams(E8G[i][0],E8G[i][1],g.t1,g.t2)){AL.delete(loser);FFG[Math.floor(i/2)][i%2]=winner;changed=true;break}}
+    });
+    // FF resolution
+    done.forEach(g=>{
+      const winner=g.s1>g.s2?g.t1:g.t2,loser=g.s1>g.s2?g.t2:g.t1;
+      for(let i=0;i<FFG.length;i++){if(FFG[i][0]&&FFG[i][1]&&matchTeams(FFG[i][0],FFG[i][1],g.t1,g.t2)){AL.delete(loser);CHG[0][i]=winner;changed=true;break}}
+    });
+    // CH resolution
+    done.forEach(g=>{
+      const loser=g.s1>g.s2?g.t2:g.t1;
+      if(CHG[0][0]&&CHG[0][1]&&matchTeams(CHG[0][0],CHG[0][1],g.t1,g.t2)){AL.delete(loser);changed=true}
+    });
+    changed=true;
+  }
+  if(d.entries&&d.entries.length>0){
+    d.entries.forEach(e=>{
+      const b=B.find(x=>x.n===e.name);
+      if(b&&e.score!=null){
+        b.s=e.score;
+        if(e.percentile!=null)b.p=Math.round(e.percentile*1000)/10;
+        if(e.wins!=null){b.w=e.wins;b.l=e.losses||0}
+        if(e.max!=null)b.mx=e.max;
+        changed=true;
+      }
+    });
+  }
+  if(changed)B.sort((a,b)=>b.s-a.s);
+  return changed;
+}
+
+// Apply server-injected initial data immediately (SSR)
+if(window.__INITIAL__&&processData(window.__INITIAL__)){renderLeaderboard();renderChampCards();renderRounds();renderBrackets()}
+
 // Live updates via serverless proxy
 async function liveUpdate(){
   try{
     const r=await fetch('/api/scores');
     if(!r.ok)return;
     const d=await r.json();
-    let changed=false;
-
-    if(d.resolved){
-      d.resolved.forEach(g=>{
-        // S16 resolution (period 3)
-        if(g.period===3){
-          const idx=g.sortOrder-1;
-          if(idx>=0&&idx<S16.length&&g.settled&&g.winner&&S16[idx][5]==='pending'){
-            S16[idx][5]='resolved';
-            S16[idx][6]=g.winner;
-            const loser=S16[idx][0]===g.winner?S16[idx][2]:S16[idx][0];
-            AL.delete(loser);
-            changed=true;
-          }
-        }
-        // E8 resolution (period 4) — mark winners, eliminate losers
-        if(g.period===4&&g.settled&&g.winner){
-          const idx=g.sortOrder-1;
-          if(idx>=0&&idx<E8G.length&&E8G[idx][0]&&E8G[idx][1]){
-            const loser=E8G[idx][0]===g.winner?E8G[idx][1]:E8G[idx][0];
-            AL.delete(loser);
-            // Feed FF matchups
-            const ffIdx=Math.floor(idx/2);
-            const ffSlot=idx%2;
-            FFG[ffIdx][ffSlot]=g.winner;
-            changed=true;
-          }
-        }
-        // FF resolution (period 5)
-        if(g.period===5&&g.settled&&g.winner){
-          const idx=g.sortOrder-1;
-          if(idx>=0&&idx<FFG.length&&FFG[idx][0]&&FFG[idx][1]){
-            const loser=FFG[idx][0]===g.winner?FFG[idx][1]:FFG[idx][0];
-            AL.delete(loser);
-            CHG[0][idx]=g.winner;
-            changed=true;
-          }
-        }
-        // Championship resolution (period 6)
-        if(g.period===6&&g.settled&&g.winner){
-          if(CHG[0][0]&&CHG[0][1]){
-            const loser=CHG[0][0]===g.winner?CHG[0][1]:CHG[0][0];
-            AL.delete(loser);
-            changed=true;
-          }
-        }
-      });
-    }
-
-    if(d.entries&&d.entries.length>0){
-      d.entries.forEach(e=>{
-        const b=B.find(x=>x.n===e.name);
-        if(b&&e.score!=null){
-          b.s=e.score;
-          if(e.percentile!=null)b.p=e.percentile;
-          if(e.wins!=null){b.w=e.wins;b.l=e.losses||0}
-          changed=true;
-        }
-      });
-    }
-
-    if(d.liveScores&&d.liveScores.length>0){SCORES=d.liveScores;changed=true}
-
-    if(changed){
-      B.sort((a,b)=>b.s-a.s);
-      renderLeaderboard();
-      renderChampCards();
-      renderRounds();
-      renderBrackets();
+    if(processData(d)){
+      renderLeaderboard();renderChampCards();renderRounds();renderBrackets();
       document.getElementById('live-badge').textContent='Live \u2014 '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
     }
     document.getElementById('update-ts').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});

@@ -1,5 +1,13 @@
 {
   "buildCommand": "",
   "outputDirectory": ".",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/api/page" }
+  ],
+  "functions": {
+    "api/page.js": {
+      "includeFiles": "index.html"
+    }
+  }
 }
