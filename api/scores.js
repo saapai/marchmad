@@ -17,8 +17,7 @@ export default async function handler(req, res) {
     // Fetch live scores from ESPN scoreboard
     let liveScores = [];
     try {
-      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-      const sb = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${today}&groups=100&limit=50`);
+      const sb = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?groups=100&limit=50');
       const sbData = await sb.json();
       if (sbData.events) {
         liveScores = sbData.events.map(ev => {
