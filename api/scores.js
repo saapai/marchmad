@@ -2,10 +2,42 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
 
+  const TEAM_MAP = {
+    'Michigan State': 'Michigan St',
+    'Connecticut': 'UConn',
+    "St. John's (NY)": "St. John's",
+  };
+  function normTeam(n) { return TEAM_MAP[n] || n; }
+
   try {
     // Fetch ESPN challenge data for game results
     const espn = await fetch('https://gambit-api.fantasy.espn.com/apis/v1/challenges/277?platform=chui&view=chui_default');
     const espnData = await espn.json();
+
+    // Fetch live scores from ESPN scoreboard
+    let liveScores = [];
+    try {
+      const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const sb = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard?dates=${today}&groups=100&limit=50`);
+      const sbData = await sb.json();
+      if (sbData.events) {
+        liveScores = sbData.events.map(ev => {
+          const comp = ev.competitions?.[0];
+          if (!comp) return null;
+          const c = comp.competitors || [];
+          if (c.length < 2) return null;
+          return {
+            t1: normTeam(c[0]?.team?.location || ''),
+            s1: parseInt(c[0]?.score) || 0,
+            t2: normTeam(c[1]?.team?.location || ''),
+            s2: parseInt(c[1]?.score) || 0,
+            detail: comp.status?.type?.detail || '',
+            state: comp.status?.type?.state || 'pre',
+            completed: comp.status?.type?.completed || false,
+          };
+        }).filter(Boolean);
+      }
+    } catch (e) { /* scoreboard fetch optional */ }
 
     // Fetch Polymarket championship odds
     let polyData = null;
@@ -47,6 +79,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       resolved,
       entries,
+      liveScores,
       polymarket: polyData,
       timestamp: new Date().toISOString()
     });

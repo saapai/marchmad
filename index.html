@@ -96,6 +96,10 @@
     .gm-m .vs{font-weight:700;font-size:10px;color:var(--t4);opacity:.5}
     .gm-m .cs{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:4px 10px;border-radius:6px;min-width:38px}
     .gm-m .fin{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:3px 8px;border-radius:4px;background:var(--emd);color:var(--em)}
+    .gm-m .sc{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;color:var(--t0);letter-spacing:.5px}
+    .gm-m .sc-st{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:2px 8px;border-radius:4px}
+    .gm-m .sc-st.live{background:var(--emd);color:var(--em)}
+    .gm-m .sc-st.final{background:var(--s3);color:var(--t2)}
     .gm .team{font-weight:700;font-size:16px;color:var(--t0);line-height:1.2}
     .gm .seed{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t4);font-weight:400}
     .gm .pct{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -221,6 +225,8 @@ const PE={Duke:.52,"St. John's":.16,"Michigan St":.16,UConn:.16,Houston:.41,Illi
 const PF={Duke:.33,Houston:.20,Illinois:.10,Michigan:.35,Arizona:.32,Purdue:.12,"Iowa State":.10,UConn:.05,"Michigan St":.05,"St. John's":.05,Arkansas:.03,Tennessee:.02,Nebraska:.02,Iowa:.01,Alabama:.01,Texas:.005};
 const PC={Duke:.18,Michigan:.21,Arizona:.215,Houston:.11,Purdue:.056,Illinois:.061,"Iowa State":.053,UConn:.033,"Michigan St":.028,"St. John's":.026,Arkansas:.021,Tennessee:.015,Nebraska:.013,Iowa:.01,Alabama:.01,Texas:.005};
 const MK={Duke:{p:18,k:20,b:"+420"},Michigan:{p:21,k:18,b:"+300"},Arizona:{p:21.5,k:18.5,b:"+330"},Houston:{p:11,k:7,b:"+750"},"Iowa State":{p:5.3,k:4.5,b:"+1700"},Purdue:{p:5.6,k:5,b:"+1500"}};
+let SCORES=[];
+function findScore(t1,t2){return SCORES.find(s=>{const a=s.t1.toLowerCase(),b=s.t2.toLowerCase(),x=t1.toLowerCase(),y=t2.toLowerCase();return(a===x&&b===y)||(a===y&&b===x)})}
 
 function cbg(t){return{Duke:"rgba(0,48,135,.12)",Michigan:"rgba(255,203,5,.07)",Arizona:"rgba(204,0,51,.08)",Houston:"rgba(200,16,46,.08)","Iowa State":"rgba(200,16,46,.08)",Purdue:"rgba(206,184,136,.07)"}[t]||"var(--s3)"}
 function cfg(t){return{Duke:"#93b4f7",Michigan:"#fcd34d",Arizona:"#fb7185",Houston:"#fb7185","Iowa State":"#fb7185",Purdue:"#e2d5b8"}[t]||"var(--t2)"}
@@ -461,7 +467,21 @@ function renderRounds(){
         extraHtml=`<div class="gm-ex"><span style="margin-right:4px">${label}</span>${parts}</div>`;
       }
 
-      html+=`<div class="gm${isResolved?' dim':''}">
+      const live=findScore(lt,rt);
+      let centerHtml;
+      if(live&&live.state!=='pre'){
+        const lsc=live.t1.toLowerCase()===lt.toLowerCase()?live.s1:live.s2;
+        const rsc=live.t1.toLowerCase()===rt.toLowerCase()?live.s1:live.s2;
+        centerHtml=`<div class="sc">${lsc} - ${rsc}</div>`;
+        if(live.completed||isResolved)centerHtml+=`<div class="sc-st final">${live.detail||'FINAL'}</div>`;
+        else centerHtml+=`<div class="sc-st live">${live.detail}</div>`;
+      }else if(isResolved){
+        centerHtml=`<div class="vs">vs</div><div class="fin">✓ ${g.win}</div>`;
+      }else{
+        centerHtml=`<div class="vs">vs</div><div class="cs" style="background:${cBg};color:${cCol}">${cScore}</div>`;
+      }
+
+      html+=`<div class="gm${isResolved&&!live?' dim':''}">
         <div class="gs">
           <div class="team"><span class="seed">${ls} </span>${lt}</div>
           <div style="display:flex;align-items:baseline;gap:6px">
@@ -473,8 +493,7 @@ function renderRounds(){
         </div>
         <div class="gm-m">
           <div class="rd">${region}</div>
-          <div class="vs">vs</div>
-          ${isResolved?`<div class="fin">✓ ${g.win}</div>`:`<div class="cs" style="background:${cBg};color:${cCol}">${cScore}</div>`}
+          ${centerHtml}
         </div>
         <div class="gs r">
           <div class="team">${rt}<span class="seed"> ${rs}</span></div>
@@ -615,6 +634,8 @@ async function liveUpdate(){
         }
       });
     }
+
+    if(d.liveScores&&d.liveScores.length>0){SCORES=d.liveScores;changed=true}
 
     if(changed){
       B.sort((a,b)=>b.s-a.s);
